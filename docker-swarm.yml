@@ -87,7 +87,7 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-0:9092,SSL_HOST://kafka-broker-0:9094
     volumes:
       - kafka_data_0:/var/lib/kafka/data
-      - ./Certificates:/etc/kafka/secrets
+      # - ./Certificates:/etc/kafka/secrets
     logging:
       driver: gelf
       options:
@@ -95,6 +95,11 @@ services:
         tag: "kafka-broker-0"
     networks:
       - poc_net
+    depends_on:
+      - logstash
+      - kafka-controller-0
+      - kafka-controller-1
+      - kafka-controller-2
 
   kafka-broker-1:
     <<: *kafka-broker-base
@@ -109,7 +114,7 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-1:9092,SSL_HOST://kafka-broker-1:9095
     volumes:
       - kafka_data_1:/var/lib/kafka/data
-      - ./Certificates:/etc/kafka/secrets
+      # - ./Certificates:/etc/kafka/secrets
     logging:
       driver: gelf
       options:
@@ -117,6 +122,11 @@ services:
         tag: "kafka-broker-1"
     networks:
       - poc_net
+    depends_on:
+      - logstash
+      - kafka-controller-0
+      - kafka-controller-1
+      - kafka-controller-2
 
   kafka-broker-2:
     <<: *kafka-broker-base
@@ -131,7 +141,7 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-2:9092,SSL_HOST://kafka-broker-2:9096
     volumes:
       - kafka_data_2:/var/lib/kafka/data
-      - ./Certificates:/etc/kafka/secrets
+      # - ./Certificates:/etc/kafka/secrets
     logging:
       driver: gelf
       options:
@@ -139,6 +149,11 @@ services:
         tag: "kafka-broker-2"
     networks:
       - poc_net
+    depends_on:
+      - logstash
+      - kafka-controller-0
+      - kafka-controller-1
+      - kafka-controller-2
 
   kafka-exporter:
     image: danielqsj/kafka-exporter:v1.8.0
@@ -315,6 +330,8 @@ services:
         tag: "mongo0"
     networks:
       - poc_net
+    depends_on:
+      - logstash
 
   mongo1:
     image: mongo:8.0.4
@@ -332,6 +349,8 @@ services:
         tag: "mongo1"
     networks:
       - poc_net
+    depends_on:
+      - logstash
 
   mongo2:
     image: mongo:8.0.4
@@ -360,6 +379,8 @@ services:
       - ME_CONFIG_MONGODB_URL=mongodb://mongo0:27017,mongo1:27018,mongo2:27019
     networks:
       - poc_net
+    depends_on:
+      - logstash
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.15.1
@@ -381,6 +402,8 @@ services:
         tag: "elasticsearch"
     networks:
       - poc_net
+    depends_on:
+      - logstash
 
   logstash:
     image: docker.elastic.co/logstash/logstash:8.15.1
@@ -407,6 +430,8 @@ services:
       - kibana_data:/usr/share/kibana/data
     networks:
       - poc_net
+    depends_on:
+      - elasticsearch
 
   # # Portainer for Docker management
   # portainer:
