@@ -76,10 +76,6 @@ services:
   # Brokers
   kafka-broker-0:
     <<: *kafka-broker-base
-    ports:
-      - target: 9092
-        published: 9092
-        protocol: tcp
     environment:
       <<: *kafka-broker-env
       KAFKA_NODE_ID: 4
@@ -102,10 +98,6 @@ services:
 
   kafka-broker-1:
     <<: *kafka-broker-base
-    ports:
-      - target: 9092
-        published: 9092
-        protocol: tcp
     environment:
       <<: *kafka-broker-env
       KAFKA_NODE_ID: 5
@@ -128,10 +120,6 @@ services:
 
   kafka-broker-2:
     <<: *kafka-broker-base
-    ports:
-      - target: 9092
-        published: 9092
-        protocol: tcp
     environment:
       <<: *kafka-broker-env
       KAFKA_NODE_ID: 6
