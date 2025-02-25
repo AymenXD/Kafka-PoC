@@ -18,18 +18,18 @@ x-kafka-broker-base: &kafka-broker-base
   image: apache/kafka:3.8.0
   environment: &kafka-broker-env
     KAFKA_PROCESS_ROLES: broker
-    KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,SSL_HOST:SSL
+    KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
     KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
     KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-    KAFKA_SSL_KEYSTORE_TYPE: ${KAFKA_SSL_KEYSTORE_TYPE}
-    KAFKA_SSL_TRUSTSTORE_TYPE: ${KAFKA_SSL_TRUSTSTORE_TYPE}
+    # KAFKA_SSL_KEYSTORE_TYPE: ${KAFKA_SSL_KEYSTORE_TYPE}
+    # KAFKA_SSL_TRUSTSTORE_TYPE: ${KAFKA_SSL_TRUSTSTORE_TYPE}
     KAFKA_CONTROLLER_QUORUM_VOTERS: 0@kafka-controller-0:9093,1@kafka-controller-1:9093,2@kafka-controller-2:9093
-    KAFKA_SSL_KEYSTORE_LOCATION: ${KAFKA_SSL_KEYSTORE_LOCATION}
-    KAFKA_SSL_KEYSTORE_PASSWORD: ${KAFKA_SSL_KEYSTORE_PASSWORD}
-    KAFKA_SSL_TRUSTSTORE_LOCATION: ${KAFKA_SSL_TRUSTSTORE_LOCATION}
-    KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: ${KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM}
+    # KAFKA_SSL_KEYSTORE_LOCATION: ${KAFKA_SSL_KEYSTORE_LOCATION}
+    # KAFKA_SSL_KEYSTORE_PASSWORD: ${KAFKA_SSL_KEYSTORE_PASSWORD}
+    # KAFKA_SSL_TRUSTSTORE_LOCATION: ${KAFKA_SSL_TRUSTSTORE_LOCATION}
+    # KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: ${KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM}
     KAFKA_LOG_DIRS: ${KAFKA_LOG_DIRS}
-    KAFKA_SSL_CLIENT_AUTH: ${KAFKA_SSL_CLIENT_AUTH}
+    # KAFKA_SSL_CLIENT_AUTH: ${KAFKA_SSL_CLIENT_AUTH}
     KAFKA_AUTO_CREATE_TOPICS_ENABLE: ${KAFKA_AUTO_CREATE_TOPICS_ENABLE}
     KAFKA_DEFAULT_REPLICATION_FACTOR: ${KAFKA_DEFAULT_REPLICATION_FACTOR}
     KAFKA_LOG_RETENTION_MS: ${KAFKA_LOG_RETENTION_MS}
@@ -77,14 +77,14 @@ services:
   kafka-broker-0:
     <<: *kafka-broker-base
     ports:
-      - target: 9094
-        published: 9094
+      - target: 9092
+        published: 9092
         protocol: tcp
     environment:
       <<: *kafka-broker-env
       KAFKA_NODE_ID: 4
-      KAFKA_LISTENERS: PLAINTEXT://kafka-broker-0:9092,SSL_HOST://kafka-broker-0:9094
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-0:9092,SSL_HOST://kafka-broker-0:9094
+      KAFKA_LISTENERS: PLAINTEXT://kafka-broker-0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-0:9092
     volumes:
       - kafka_data_0:/var/lib/kafka/data
       # - ./Certificates:/etc/kafka/secrets
@@ -103,14 +103,14 @@ services:
   kafka-broker-1:
     <<: *kafka-broker-base
     ports:
-      - target: 9095
-        published: 9095
+      - target: 9092
+        published: 9092
         protocol: tcp
     environment:
       <<: *kafka-broker-env
       KAFKA_NODE_ID: 5
-      KAFKA_LISTENERS: PLAINTEXT://kafka-broker-1:9092,SSL_HOST://kafka-broker-1:9095
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-1:9092,SSL_HOST://kafka-broker-1:9095
+      KAFKA_LISTENERS: PLAINTEXT://kafka-broker-1:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-1:9092
     volumes:
       - kafka_data_1:/var/lib/kafka/data
       # - ./Certificates:/etc/kafka/secrets
@@ -129,14 +129,14 @@ services:
   kafka-broker-2:
     <<: *kafka-broker-base
     ports:
-      - target: 9096
-        published: 9096
+      - target: 9092
+        published: 9092
         protocol: tcp
     environment:
       <<: *kafka-broker-env
       KAFKA_NODE_ID: 6
-      KAFKA_LISTENERS: PLAINTEXT://kafka-broker-2:9092,SSL_HOST://kafka-broker-2:9096
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-2:9092,SSL_HOST://kafka-broker-2:9096
+      KAFKA_LISTENERS: PLAINTEXT://kafka-broker-2:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-2:9092
     volumes:
       - kafka_data_2:/var/lib/kafka/data
       # - ./Certificates:/etc/kafka/secrets
