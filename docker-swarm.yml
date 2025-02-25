@@ -91,7 +91,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: tcp://logstash:5044
+        gelf-address: tcp://host.docker.internal:5044
         tag: "kafka-broker-0"
     networks:
       - poc_net
@@ -118,7 +118,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: tcp://logstash:5044
+        gelf-address: tcp://host.docker.internal:5044
         tag: "kafka-broker-1"
     networks:
       - poc_net
@@ -145,7 +145,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: tcp://logstash:5044
+        gelf-address: tcp://host.docker.internal:5044
         tag: "kafka-broker-2"
     networks:
       - poc_net
@@ -212,7 +212,7 @@ services:
   #   logging:
   #     driver: gelf
   #     options:
-  #       gelf-address: tcp://logstash:5044
+  #       gelf-address: tcp://host.docker.internal:5044
   #       tag: "producer-ats"
   #   volumes:
   #     - ./Producers/Certificates:/app/Certificates
@@ -246,7 +246,7 @@ services:
   #   logging:
   #     driver: gelf
   #     options:
-  #       gelf-address: tcp://logstash:5044
+  #       gelf-address: tcp://host.docker.internal:5044
   #       tag: "consumer-ats"
   #   volumes:
   #     - ./Consumers/Certificates:/app/Certificates
@@ -326,7 +326,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: tcp://logstash:5044
+        gelf-address: tcp://host.docker.internal:5044
         tag: "mongo0"
     networks:
       - poc_net
@@ -345,7 +345,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: tcp://logstash:5044
+        gelf-address: tcp://host.docker.internal:5044
         tag: "mongo1"
     networks:
       - poc_net
@@ -364,7 +364,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: tcp://logstash:5044
+        gelf-address: tcp://host.docker.internal:5044
         tag: "mongo2"
     networks:
       - poc_net
@@ -398,7 +398,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: tcp://logstash:5044
+        gelf-address: tcp://host.docker.internal:5044
         tag: "elasticsearch"
     networks:
       - poc_net
