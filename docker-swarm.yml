@@ -96,7 +96,6 @@ services:
     networks:
       - poc_net
     depends_on:
-      - logstash
       - kafka-controller-0
       - kafka-controller-1
       - kafka-controller-2
@@ -123,7 +122,6 @@ services:
     networks:
       - poc_net
     depends_on:
-      - logstash
       - kafka-controller-0
       - kafka-controller-1
       - kafka-controller-2
@@ -150,7 +148,6 @@ services:
     networks:
       - poc_net
     depends_on:
-      - logstash
       - kafka-controller-0
       - kafka-controller-1
       - kafka-controller-2
@@ -257,35 +254,35 @@ services:
   #   networks:
   #     - poc_net
 
-  prometheus:
-    image: prom/prometheus
-    ports:
-      - target: 9090
-        published: 9090
-        protocol: tcp
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    deploy:
-      restart_policy:
-        condition: on-failure
-      replicas: 1
-    networks:
-      - poc_net
+  # prometheus:
+  #   image: prom/prometheus
+  #   ports:
+  #     - target: 9090
+  #       published: 9090
+  #       protocol: tcp
+  #   volumes:
+  #     - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  #   deploy:
+  #     restart_policy:
+  #       condition: on-failure
+  #     replicas: 1
+  #   networks:
+  #     - poc_net
 
-  grafana:
-    image: grafana/grafana:11.5.2
-    ports:
-      - target: 3000
-        published: 3000
-        protocol: tcp
-    volumes:
-      - grafana_data:/var/lib/grafana
-    deploy:
-      restart_policy:
-        condition: on-failure
-      replicas: 1
-    networks:
-      - poc_net
+  # grafana:
+  #   image: grafana/grafana:11.5.2
+  #   ports:
+  #     - target: 3000
+  #       published: 3000
+  #       protocol: tcp
+  #   volumes:
+  #     - grafana_data:/var/lib/grafana
+  #   deploy:
+  #     restart_policy:
+  #       condition: on-failure
+  #     replicas: 1
+  #   networks:
+  #     - poc_net
 
   # akhq:
   #   image: tchiotludo/akhq
@@ -379,59 +376,59 @@ services:
       - ME_CONFIG_MONGODB_URL=mongodb://mongo0:27017,mongo1:27018,mongo2:27019
     networks:
       - poc_net
-    depends_on:
-      - logstash
+    # depends_on:
+    #   - logstash
 
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.1
-    environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    volumes:
-      - elastic_data:/usr/share/elasticsearch/data
-    ports:
-      - target: 9200
-        published: 9200
-        protocol: tcp
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: tcp://host.docker.internal:5044
-    #     tag: "elasticsearch"
-    networks:
-      - poc_net
-    depends_on:
-      - logstash
+  # elasticsearch:
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:8.15.1
+  #   environment:
+  #     - discovery.type=single-node
+  #     - xpack.security.enabled=false
+  #     - bootstrap.memory_lock=true
+  #     - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+  #   volumes:
+  #     - elastic_data:/usr/share/elasticsearch/data
+  #   ports:
+  #     - target: 9200
+  #       published: 9200
+  #       protocol: tcp
+  #   # logging:
+  #   #   driver: gelf
+  #   #   options:
+  #   #     gelf-address: tcp://host.docker.internal:5044
+  #   #     tag: "elasticsearch"
+  #   networks:
+  #     - poc_net
+  #   depends_on:
+  #     - logstash
 
-  logstash:
-    image: docker.elastic.co/logstash/logstash:8.15.1
-    volumes:
-      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
-    ports:
-      - target: 5044
-        published: 5044
-        protocol: tcp
-    networks:
-      - poc_net
+  # logstash:
+  #   image: docker.elastic.co/logstash/logstash:8.15.1
+  #   volumes:
+  #     - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+  #   ports:
+  #     - target: 5044
+  #       published: 5044
+  #       protocol: tcp
+  #   networks:
+  #     - poc_net
 
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.15.1
-    environment:
-      - ELASTICSEARCH_URL=http://elasticsearch:9200
-      - ELASTICSEARCH_USERNAME=admin
-      - ELASTICSEARCH_PASSWORD=pass
-    ports:
-      - target: 8082
-        published: 8082
-        protocol: tcp
-    volumes:
-      - kibana_data:/usr/share/kibana/data
-    networks:
-      - poc_net
-    depends_on:
-      - elasticsearch
+  # kibana:
+  #   image: docker.elastic.co/kibana/kibana:8.15.1
+  #   environment:
+  #     - ELASTICSEARCH_URL=http://elasticsearch:9200
+  #     - ELASTICSEARCH_USERNAME=admin
+  #     - ELASTICSEARCH_PASSWORD=pass
+  #   ports:
+  #     - target: 8082
+  #       published: 8082
+  #       protocol: tcp
+  #   volumes:
+  #     - kibana_data:/usr/share/kibana/data
+  #   networks:
+  #     - poc_net
+  #   depends_on:
+  #     - elasticsearch
 
   # # Portainer for Docker management
   # portainer:
