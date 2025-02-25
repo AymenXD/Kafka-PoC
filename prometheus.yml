@@ -1,0 +1,25 @@
+global:
+  scrape_interval: 10s
+
+scrape_configs:
+  - job_name: 'kafka-exporter'
+    static_configs:
+      - targets: ['kafka-exporter:9308']
+
+  - job_name: 'producer-ats'
+    static_configs:
+      - targets: ['producer-ats:5131']
+
+  - job_name: 'consumer-ats'
+    static_configs:
+      - targets: ['consumer-ats:5121']
+
+# Not Implemented yet
+  # - job_name: 'consumer-vds'
+  #   static_configs:
+  #     - targets: ['consumer-vds:5141']
+
+# Not used in Grafana
+  - job_name: 'mongodb-exporter'
+    static_configs:
+      - targets: ['mongodb-exporter:9216']

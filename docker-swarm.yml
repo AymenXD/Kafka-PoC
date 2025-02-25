@@ -1,0 +1,445 @@
+version: "3.8"
+
+# YAML Extension for Kafka Controllers (base configuration)
+x-kafka-controller-base: &kafka-controller-base
+  image: apache/kafka:3.8.0
+  environment: &kafka-controller-env
+    KAFKA_PROCESS_ROLES: controller
+    KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+    KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT
+    KAFKA_LOG_DIRS: ${KAFKA_LOG_DIRS}
+    KAFKA_CONTROLLER_QUORUM_VOTERS: 0@kafka-controller-0:9093,1@kafka-controller-1:9093,2@kafka-controller-2:9093
+  deploy:
+    restart_policy:
+      condition: any
+
+# YAML Extension for Kafka Brokers (base configuration)
+x-kafka-broker-base: &kafka-broker-base
+  image: apache/kafka:3.8.0
+  environment: &kafka-broker-env
+    KAFKA_PROCESS_ROLES: broker
+    KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,SSL_HOST:SSL
+    KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+    KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+    KAFKA_SSL_KEYSTORE_TYPE: ${KAFKA_SSL_KEYSTORE_TYPE}
+    KAFKA_SSL_TRUSTSTORE_TYPE: ${KAFKA_SSL_TRUSTSTORE_TYPE}
+    KAFKA_CONTROLLER_QUORUM_VOTERS: 0@kafka-controller-0:9093,1@kafka-controller-1:9093,2@kafka-controller-2:9093
+    KAFKA_SSL_KEYSTORE_LOCATION: ${KAFKA_SSL_KEYSTORE_LOCATION}
+    KAFKA_SSL_KEYSTORE_PASSWORD: ${KAFKA_SSL_KEYSTORE_PASSWORD}
+    KAFKA_SSL_TRUSTSTORE_LOCATION: ${KAFKA_SSL_TRUSTSTORE_LOCATION}
+    KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: ${KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM}
+    KAFKA_LOG_DIRS: ${KAFKA_LOG_DIRS}
+    KAFKA_SSL_CLIENT_AUTH: ${KAFKA_SSL_CLIENT_AUTH}
+    KAFKA_AUTO_CREATE_TOPICS_ENABLE: ${KAFKA_AUTO_CREATE_TOPICS_ENABLE}
+    KAFKA_DEFAULT_REPLICATION_FACTOR: ${KAFKA_DEFAULT_REPLICATION_FACTOR}
+    KAFKA_LOG_RETENTION_MS: ${KAFKA_LOG_RETENTION_MS}
+    KAFKA_LOG_RETENTION_BYTES: ${KAFKA_LOG_RETENTION_BYTES}
+  deploy:
+    restart_policy:
+      condition: any
+
+services:
+  # Controllers
+  kafka-controller-0:
+    <<: *kafka-controller-base
+    environment:
+      <<: *kafka-controller-env
+      KAFKA_NODE_ID: 0
+      KAFKA_LISTENERS: CONTROLLER://kafka-controller-0:9093
+    volumes:
+      - kafka_controller_data_0:/var/lib/kafka/data
+    networks:
+      - poc_net
+
+  kafka-controller-1:
+    <<: *kafka-controller-base
+    environment:
+      <<: *kafka-controller-env
+      KAFKA_NODE_ID: 1
+      KAFKA_LISTENERS: CONTROLLER://kafka-controller-1:9093
+    volumes:
+      - kafka_controller_data_1:/var/lib/kafka/data
+    networks:
+      - poc_net
+
+  kafka-controller-2:
+    <<: *kafka-controller-base
+    environment:
+      <<: *kafka-controller-env
+      KAFKA_NODE_ID: 2
+      KAFKA_LISTENERS: CONTROLLER://kafka-controller-2:9093
+    volumes:
+      - kafka_controller_data_2:/var/lib/kafka/data
+    networks:
+      - poc_net
+
+  # Brokers
+  kafka-broker-0:
+    <<: *kafka-broker-base
+    ports:
+      - target: 9094
+        published: 9094
+        protocol: tcp
+    environment:
+      <<: *kafka-broker-env
+      KAFKA_NODE_ID: 4
+      KAFKA_LISTENERS: PLAINTEXT://kafka-broker-0:9092,SSL_HOST://kafka-broker-0:9094
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-0:9092,SSL_HOST://kafka-broker-0:9094
+    volumes:
+      - kafka_data_0:/var/lib/kafka/data
+      - ./Certificates:/etc/kafka/secrets
+    logging:
+      driver: gelf
+      options:
+        gelf-address: ${GELF_ADDRESS}
+        tag: "kafka-broker-0"
+    networks:
+      - poc_net
+
+  kafka-broker-1:
+    <<: *kafka-broker-base
+    ports:
+      - target: 9095
+        published: 9095
+        protocol: tcp
+    environment:
+      <<: *kafka-broker-env
+      KAFKA_NODE_ID: 5
+      KAFKA_LISTENERS: PLAINTEXT://kafka-broker-1:9092,SSL_HOST://kafka-broker-1:9095
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-1:9092,SSL_HOST://kafka-broker-1:9095
+    volumes:
+      - kafka_data_1:/var/lib/kafka/data
+      - ./Certificates:/etc/kafka/secrets
+    logging:
+      driver: gelf
+      options:
+        gelf-address: ${GELF_ADDRESS}
+        tag: "kafka-broker-1"
+    networks:
+      - poc_net
+
+  kafka-broker-2:
+    <<: *kafka-broker-base
+    ports:
+      - target: 9096
+        published: 9096
+        protocol: tcp
+    environment:
+      <<: *kafka-broker-env
+      KAFKA_NODE_ID: 6
+      KAFKA_LISTENERS: PLAINTEXT://kafka-broker-2:9092,SSL_HOST://kafka-broker-2:9096
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-2:9092,SSL_HOST://kafka-broker-2:9096
+    volumes:
+      - kafka_data_2:/var/lib/kafka/data
+      - ./Certificates:/etc/kafka/secrets
+    logging:
+      driver: gelf
+      options:
+        gelf-address: ${GELF_ADDRESS}
+        tag: "kafka-broker-2"
+    networks:
+      - poc_net
+
+  kafka-exporter:
+    image: danielqsj/kafka-exporter:v1.8.0
+    ports:
+      - target: 9308
+        published: 9308
+        protocol: tcp
+    command:
+      - "--kafka.server=kafka-broker-0:9092"
+      - "--kafka.server=kafka-broker-1:9092"
+      - "--kafka.server=kafka-broker-2:9092"
+    deploy:
+      restart_policy:
+        condition: on-failure
+      replicas: 1  # Replicated for load balancing
+    networks:
+      - poc_net
+
+  data-generation:
+    image: dip.ad.atsonline.de:5000/cloud_evaluation/data-generation:latest
+    ports:
+      - target: 5247
+        published: 5247
+        protocol: tcp
+    deploy:
+      restart_policy:
+        condition: on-failure
+      replicas: 1
+    networks:
+      - poc_net
+
+  producer-ats:
+    image: dip.ad.atsonline.de:5000/cloud_evaluation/producer:ssl
+    ports:
+      - target: 5131
+        published: 5131
+        protocol: tcp
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Kafka__Brokers=kafka-broker-0:9094,kafka-broker-1:9095,kafka-broker-2:9096
+      - Kafka__Create_Topics__0=ats1-iot-data
+      - Kafka__Create_Topics__1=ats2-iot-data
+      - Kafka__Create_Topics__2=ats3-iot-data
+      - Companies__ATS1_API=http://data-generation:5247/data/ats1
+      - Companies__ATS1_Topic=ats1-iot-data
+      - Companies__ATS1_Delay=1000
+      - Companies__ATS2_API=http://data-generation:5247/data/ats2
+      - Companies__ATS2_Topic=ats2-iot-data
+      - Companies__ATS2_Delay=5000
+      - Companies__ATS3_API=http://data-generation:5247/data/ats3
+      - Companies__ATS3_Topic=ats3-iot-data
+      - Companies__ATS3_Delay=10000
+      - Certificate__CAPath=${CERTIFICATE_CA_PATH}
+      - Certificate__Path=${CERTIFICATE_PATH}
+      - Certificate__Password=${CERTIFICATE_PASSWORD}
+    logging:
+      driver: gelf
+      options:
+        gelf-address: ${GELF_ADDRESS}
+        tag: "producer-ats"
+    volumes:
+      - ./Producers/Certificates:/app/Certificates
+    deploy:
+      restart_policy:
+        condition: on-failure
+      replicas: 1
+    networks:
+      - poc_net
+
+  consumer-ats:
+    image: dip.ad.atsonline.de:5000/cloud_evaluation/consumer:ssl
+    ports:
+      - target: 5121
+        published: 5121
+        protocol: tcp
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Kafka__Brokers=kafka-broker-0:9094,kafka-broker-1:9095,kafka-broker-2:9096
+      - Kafka__Consumer_Group=ats-group
+      - Kafka__Create_Topics__0=ats1-iot-data
+      - Kafka__Create_Topics__1=ats2-iot-data
+      - Kafka__Create_Topics__2=ats3-iot-data
+      - Kafka__Subscribe_Topics__0=ats1-iot-data
+      - Kafka__Subscribe_Topics__1=ats2-iot-data
+      - Kafka__Subscribe_Topics__2=ats3-iot-data
+      - MongoDB__ConnectionStrings=mongodb://mongo0:27017,mongo1:27018,mongo2:27019/?replicaSet=rs0
+      - Certificate__CAPath=${CERTIFICATE_CA_PATH}
+      - Certificate__Path=${CERTIFICATE_PATH}
+      - Certificate__Password=${CERTIFICATE_PASSWORD}
+    logging:
+      driver: gelf
+      options:
+        gelf-address: ${GELF_ADDRESS}
+        tag: "consumer-ats"
+    volumes:
+      - ./Consumers/Certificates:/app/Certificates
+    deploy:
+      restart_policy:
+        condition: on-failure
+      replicas: 2  # Increase replicas for load balancing
+    networks:
+      - poc_net
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - target: 9090
+        published: 9090
+        protocol: tcp
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    deploy:
+      restart_policy:
+        condition: on-failure
+      replicas: 1
+    networks:
+      - poc_net
+
+  grafana:
+    image: grafana/grafana:11.5.2
+    ports:
+      - target: 3000
+        published: 3000
+        protocol: tcp
+    volumes:
+      - grafana_data:/var/lib/grafana
+    deploy:
+      restart_policy:
+        condition: on-failure
+      replicas: 1
+    networks:
+      - poc_net
+
+  # akhq:
+  #   image: tchiotludo/akhq
+  #   ports:
+  #     - target: 8080
+  #       published: 8080
+  #       protocol: tcp
+  #   environment:
+  #     AKHQ_CONFIGURATION: |
+  #       akhq:
+  #         connections:
+  #           kafka:
+  #             properties:
+  #               bootstrap.servers: "kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092"
+  #   deploy:
+  #     restart_policy:
+  #       condition: on-failure
+  #     replicas: 1
+  #   networks:
+  #     - poc_net
+
+  mongo0:
+    image: mongo:8.0.4
+    command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - "echo \"try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo0:27017',priority:2},{_id:1,host:'mongo1:27018',priority:1},{_id:2,host:'mongo2:27019',priority:0.5}]}) }\" | mongosh --port 27017 --quiet"
+      interval: 5s
+      timeout: 30s
+      retries: 30
+    ports:
+      - target: 27017
+        published: 27017
+        protocol: tcp
+    volumes:
+      - mongo0_data:/data/db
+    logging:
+      driver: gelf
+      options:
+        gelf-address: ${GELF_ADDRESS}
+        tag: "mongo0"
+    networks:
+      - poc_net
+
+  mongo1:
+    image: mongo:8.0.4
+    command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27018"]
+    ports:
+      - target: 27018
+        published: 27018
+        protocol: tcp
+    volumes:
+      - mongo1_data:/data/db
+    logging:
+      driver: gelf
+      options:
+        gelf-address: ${GELF_ADDRESS}
+        tag: "mongo1"
+    networks:
+      - poc_net
+
+  mongo2:
+    image: mongo:8.0.4
+    command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27019"]
+    ports:
+      - target: 27019
+        published: 27019
+        protocol: tcp
+    volumes:
+      - mongo2_data:/data/db
+    logging:
+      driver: gelf
+      options:
+        gelf-address: ${GELF_ADDRESS}
+        tag: "mongo2"
+    networks:
+      - poc_net
+
+  mongo-express:
+    image: mongo-express:latest
+    ports:
+      - target: 8081
+        published: 8081
+        protocol: tcp
+    environment:
+      - ME_CONFIG_MONGODB_URL=mongodb://mongo0:27017,mongo1:27018,mongo2:27019
+    networks:
+      - poc_net
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.1
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - elastic_data:/usr/share/elasticsearch/data
+    ports:
+      - target: 9200
+        published: 9200
+        protocol: tcp
+    logging:
+      driver: gelf
+      options:
+        gelf-address: ${GELF_ADDRESS}
+        tag: "elasticsearch"
+    networks:
+      - poc_net
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.15.1
+    volumes:
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    ports:
+      - target: 5044
+        published: 5044
+        protocol: tcp
+    networks:
+      - poc_net
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.15.1
+    environment:
+      - ELASTICSEARCH_URL=${ELASTICSEARCH_URL}
+      - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
+      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
+    ports:
+      - target: 8082
+        published: 8082
+        protocol: tcp
+    volumes:
+      - kibana_data:/usr/share/kibana/data
+    networks:
+      - poc_net
+
+  # # Portainer for Docker management
+  # portainer:
+  #   image: portainer/portainer-ce:latest
+  #   ports:
+  #     - target: 9000
+  #       published: 9000
+  #       protocol: tcp
+  #   volumes:
+  #     - portainer_data:/data
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   deploy:
+  #     restart_policy:
+  #       condition: on-failure
+  #     replicas: 1
+  #   networks:
+  #     - poc_net
+
+volumes:
+  kafka_controller_data_0:
+  kafka_controller_data_1:
+  kafka_controller_data_2:
+  kafka_data_0:
+  kafka_data_1:
+  kafka_data_2:
+  mongo0_data:
+  mongo1_data:
+  mongo2_data:
+  grafana_data:
+  elastic_data:
+  kibana_data:
+  # portainer_data:
+
+networks:
+  poc_net:
+    driver: overlay
