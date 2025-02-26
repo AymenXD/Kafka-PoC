@@ -453,8 +453,8 @@ volumes:
     driver: local
   # grafana_data:
   #   driver: local
-  # elastic_data:
-  #   driver: local
+  elastic_data:
+    driver: local
   # kibana_data:
   #   driver: local
   # portainer_data:
