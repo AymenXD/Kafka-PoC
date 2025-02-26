@@ -469,7 +469,8 @@ volumes:
     driver: local
   kibana_data:
     driver: local
-  # portainer_data:
+  portainer_data:
+    driver: local
 
 networks:
   poc_net:
