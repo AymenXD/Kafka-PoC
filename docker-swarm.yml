@@ -88,11 +88,11 @@ services:
     volumes:
       - kafka_data_0:/var/lib/kafka/data
       # - ./Certificates:/etc/kafka/secrets
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: tcp://host.docker.internal:5044
-    #     tag: "kafka-broker-0"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: tcp://logstash:5044
+        tag: "kafka-broker-0"
     networks:
       - poc_net
 
@@ -107,11 +107,11 @@ services:
     volumes:
       - kafka_data_1:/var/lib/kafka/data
       # - ./Certificates:/etc/kafka/secrets
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: tcp://host.docker.internal:5044
-    #     tag: "kafka-broker-1"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: tcp://logstash:5044
+        tag: "kafka-broker-1"
     networks:
       - poc_net
 
@@ -126,11 +126,11 @@ services:
     volumes:
       - kafka_data_2:/var/lib/kafka/data
       # - ./Certificates:/etc/kafka/secrets
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: tcp://host.docker.internal:5044
-    #     tag: "kafka-broker-2"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: tcp://logstash:5044
+        tag: "kafka-broker-2"
     networks:
       - poc_net
 
@@ -237,35 +237,38 @@ services:
   #   networks:
   #     - poc_net
 
-  # prometheus:
-  #   image: prom/prometheus
-  #   ports:
-  #     - target: 9090
-  #       published: 9090
-  #       protocol: tcp
-  #   volumes:
-  #     - ./prometheus.yml:/etc/prometheus/prometheus.yml
-  #   deploy:
-  #     restart_policy:
-  #       condition: on-failure
-  #     replicas: 1
-  #   networks:
-  #     - poc_net
+  prometheus:
+    image: prom/prometheus
+    hostname: prometheus
+    ports:
+      - target: 9090
+        published: 9090
+        protocol: tcp
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    deploy:
+      restart_policy:
+        condition: on-failure
+      replicas: 1
+    networks:
+      - poc_net
 
-  # grafana:
-  #   image: grafana/grafana:11.5.2
-  #   ports:
-  #     - target: 3000
-  #       published: 3000
-  #       protocol: tcp
-  #   volumes:
-  #     - grafana_data:/var/lib/grafana
-  #   deploy:
-  #     restart_policy:
-  #       condition: on-failure
-  #     replicas: 1
-  #   networks:
-  #     - poc_net
+  grafana:
+    image: grafana/grafana:11.5.2
+    hostname: grafana
+    container_name: grafana
+    ports:
+      - target: 3000
+        published: 3000
+        protocol: tcp
+    volumes:
+      - grafana_data:/var/lib/grafana
+    deploy:
+      restart_policy:
+        condition: on-failure
+      replicas: 1
+    networks:
+      - poc_net
 
   akhq:
     image: tchiotludo/akhq
@@ -305,11 +308,11 @@ services:
         protocol: tcp
     volumes:
       - mongo0_data:/data/db
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: tcp://host.docker.internal:5044
-    #     tag: "mongo0"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: tcp://logstash:5044
+        tag: "mongo0"
     networks:
       - poc_net
     depends_on:
@@ -325,11 +328,11 @@ services:
         protocol: tcp
     volumes:
       - mongo1_data:/data/db
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: tcp://host.docker.internal:5044
-    #     tag: "mongo1"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: tcp://logstash:5044
+        tag: "mongo1"
     networks:
       - poc_net
     depends_on:
@@ -345,11 +348,11 @@ services:
         protocol: tcp
     volumes:
       - mongo2_data:/data/db
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: tcp://host.docker.internal:5044
-    #     tag: "mongo2"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: tcp://logstash:5044
+        tag: "mongo2"
     networks:
       - poc_net
 
@@ -379,11 +382,11 @@ services:
       - target: 9200
         published: 9200
         protocol: tcp
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: tcp://host.docker.internal:5044
-    #     tag: "elasticsearch"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: tcp://logstash:5044
+        tag: "elasticsearch"
     networks:
       - poc_net
 
@@ -449,8 +452,8 @@ volumes:
     driver: local
   mongo2_data:
     driver: local
-  # grafana_data:
-  #   driver: local
+  grafana_data:
+    driver: local
   elastic_data:
     driver: local
   kibana_data:
