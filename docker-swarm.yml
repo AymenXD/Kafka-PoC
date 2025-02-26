@@ -7,7 +7,7 @@ x-kafka-controller-base: &kafka-controller-base
     KAFKA_PROCESS_ROLES: controller
     KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT
-    # KAFKA_LOG_DIRS: ${KAFKA_LOG_DIRS}
+    KAFKA_LOG_DIRS: /var/lib/kafka/data
     KAFKA_CONTROLLER_QUORUM_VOTERS: 0@kafka-controller-0:9093,1@kafka-controller-1:9093,2@kafka-controller-2:9093
   deploy:
     restart_policy:
@@ -28,12 +28,12 @@ x-kafka-broker-base: &kafka-broker-base
     # KAFKA_SSL_KEYSTORE_PASSWORD: ${KAFKA_SSL_KEYSTORE_PASSWORD}
     # KAFKA_SSL_TRUSTSTORE_LOCATION: ${KAFKA_SSL_TRUSTSTORE_LOCATION}
     # KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: ${KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM}
-    # KAFKA_LOG_DIRS: ${KAFKA_LOG_DIRS}
     # KAFKA_SSL_CLIENT_AUTH: ${KAFKA_SSL_CLIENT_AUTH}
-    # KAFKA_AUTO_CREATE_TOPICS_ENABLE: ${KAFKA_AUTO_CREATE_TOPICS_ENABLE}
-    # KAFKA_DEFAULT_REPLICATION_FACTOR: ${KAFKA_DEFAULT_REPLICATION_FACTOR}
-    # KAFKA_LOG_RETENTION_MS: ${KAFKA_LOG_RETENTION_MS}
-    # KAFKA_LOG_RETENTION_BYTES: ${KAFKA_LOG_RETENTION_BYTES}
+    KAFKA_LOG_DIRS: /var/lib/kafka/data
+    KAFKA_AUTO_CREATE_TOPICS_ENABLE: false
+    KAFKA_DEFAULT_REPLICATION_FACTOR: 3
+    KAFKA_LOG_RETENTION_MS: 604800000
+    KAFKA_LOG_RETENTION_BYTES: 1073741824
   deploy:
     restart_policy:
       condition: any
@@ -387,6 +387,7 @@ services:
 
   logstash:
     image: docker.elastic.co/logstash/logstash:8.15.1
+    hostname: logstash
     volumes:
       - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
     ports:
@@ -398,6 +399,7 @@ services:
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.15.1
+    hostname: kibana
     environment:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
       - ELASTICSEARCH_USERNAME=admin
