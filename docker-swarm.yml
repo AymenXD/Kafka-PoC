@@ -88,11 +88,11 @@ services:
     volumes:
       - kafka_data_0:/var/lib/kafka/data
       # - ./Certificates:/etc/kafka/secrets
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: "tcp://localhost:5044"
-    #     tag: "kafka-broker-0"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "tcp://logstash:5044"
+        tag: "kafka-broker-0"
     networks:
       - poc_net
 
@@ -107,11 +107,11 @@ services:
     volumes:
       - kafka_data_1:/var/lib/kafka/data
       # - ./Certificates:/etc/kafka/secrets
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: "tcp://localhost:5044"
-    #     tag: "kafka-broker-1"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "tcp://logstash:5044"
+        tag: "kafka-broker-1"
     networks:
       - poc_net
 
@@ -126,11 +126,11 @@ services:
     volumes:
       - kafka_data_2:/var/lib/kafka/data
       # - ./Certificates:/etc/kafka/secrets
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: "tcp://localhost:5044"
-    #     tag: "kafka-broker-2"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "tcp://logstash:5044"
+        tag: "kafka-broker-2"
     networks:
       - poc_net
 
@@ -234,7 +234,7 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-      replicas: 2  # Increase replicas for load balancing
+      replicas: 1  # Increase replicas for load balancing
     networks:
       - poc_net
 
@@ -308,11 +308,11 @@ services:
         protocol: tcp
     volumes:
       - mongo0_data:/data/db
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: "tcp://localhost:5044"
-    #     tag: "mongo0"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "tcp://logstash:5044"
+        tag: "mongo0"
     networks:
       - poc_net
 
@@ -326,11 +326,11 @@ services:
         protocol: tcp
     volumes:
       - mongo1_data:/data/db
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: "tcp://localhost:5044"
-    #     tag: "mongo1"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "tcp://logstash:5044"
+        tag: "mongo1"
     networks:
       - poc_net
 
@@ -344,11 +344,11 @@ services:
         protocol: tcp
     volumes:
       - mongo2_data:/data/db
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: "tcp://localhost:5044"
-    #     tag: "mongo2"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "tcp://logstash:5044"
+        tag: "mongo2"
     networks:
       - poc_net
 
@@ -378,11 +378,11 @@ services:
       - target: 9200
         published: 9200
         protocol: tcp
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: "tcp://localhost:5044"
-    #     tag: "elasticsearch"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "tcp://logstash:5044"
+        tag: "elasticsearch"
     networks:
       - poc_net
 
