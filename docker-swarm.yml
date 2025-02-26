@@ -83,7 +83,7 @@ services:
     environment:
       <<: *kafka-broker-env
       KAFKA_NODE_ID: 4
-      KAFKA_LISTENERS: PLAINTEXT://kafka-broker-0:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-0:9092
     volumes:
       - kafka_data_0:/var/lib/kafka/data
@@ -102,7 +102,7 @@ services:
     environment:
       <<: *kafka-broker-env
       KAFKA_NODE_ID: 5
-      KAFKA_LISTENERS: PLAINTEXT://kafka-broker-1:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-1:9092
     volumes:
       - kafka_data_1:/var/lib/kafka/data
@@ -121,7 +121,7 @@ services:
     environment:
       <<: *kafka-broker-env
       KAFKA_NODE_ID: 6
-      KAFKA_LISTENERS: PLAINTEXT://kafka-broker-2:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-2:9092
     volumes:
       - kafka_data_2:/var/lib/kafka/data
@@ -168,6 +168,7 @@ services:
 
   producer-ats:
     image: dip.ad.atsonline.de:5000/cloud_evaluation/producer:latest
+    hostname: producer-ats
     ports:
       - target: 5131
         published: 5131
@@ -206,6 +207,7 @@ services:
 
   consumer-ats:
     image: dip.ad.atsonline.de:5000/cloud_evaluation/consumer:latest
+    hostname: consumer-ats
     ports:
       - target: 5121
         published: 5121
