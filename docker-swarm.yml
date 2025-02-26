@@ -42,6 +42,7 @@ services:
   # Controllers
   kafka-controller-0:
     <<: *kafka-controller-base
+    hostname: kafka-controller-0
     environment:
       <<: *kafka-controller-env
       KAFKA_NODE_ID: 0
@@ -53,6 +54,7 @@ services:
 
   kafka-controller-1:
     <<: *kafka-controller-base
+    hostname: kafka-controller-1
     environment:
       <<: *kafka-controller-env
       KAFKA_NODE_ID: 1
@@ -64,6 +66,7 @@ services:
 
   kafka-controller-2:
     <<: *kafka-controller-base
+    hostname: kafka-controller-2
     environment:
       <<: *kafka-controller-env
       KAFKA_NODE_ID: 2
@@ -76,6 +79,7 @@ services:
   # Brokers
   kafka-broker-0:
     <<: *kafka-broker-base
+    hostname: kafka-broker-0
     environment:
       <<: *kafka-broker-env
       KAFKA_NODE_ID: 4
@@ -94,6 +98,7 @@ services:
 
   kafka-broker-1:
     <<: *kafka-broker-base
+    hostname: kafka-brker-1
     environment:
       <<: *kafka-broker-env
       KAFKA_NODE_ID: 5
@@ -112,6 +117,7 @@ services:
 
   kafka-broker-2:
     <<: *kafka-broker-base
+    hostname: kafka-broker-2
     environment:
       <<: *kafka-broker-env
       KAFKA_NODE_ID: 6
