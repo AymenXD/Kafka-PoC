@@ -98,7 +98,7 @@ services:
 
   kafka-broker-1:
     <<: *kafka-broker-base
-    hostname: kafka-brker-1
+    hostname: kafka-broker-1
     environment:
       <<: *kafka-broker-env
       KAFKA_NODE_ID: 5
