@@ -405,7 +405,7 @@ services:
       - ELASTICSEARCH_USERNAME=admin
       - ELASTICSEARCH_PASSWORD=pass
     ports:
-      - target: 8082
+      - target: 5601
         published: 8082
         protocol: tcp
     volumes:
