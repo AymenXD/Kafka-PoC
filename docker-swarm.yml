@@ -134,22 +134,23 @@ services:
     networks:
       - poc_net
 
-  # kafka-exporter:
-  #   image: danielqsj/kafka-exporter:v1.8.0
-  #   ports:
-  #     - target: 9308
-  #       published: 9308
-  #       protocol: tcp
-  #   command:
-  #     - "--kafka.server=kafka-broker-0:9092"
-  #     - "--kafka.server=kafka-broker-1:9092"
-  #     - "--kafka.server=kafka-broker-2:9092"
-  #   deploy:
-  #     restart_policy:
-  #       condition: on-failure
-  #     replicas: 1  # Replicated for load balancing
-  #   networks:
-  #     - poc_net
+  kafka-exporter:
+    image: danielqsj/kafka-exporter:v1.8.0
+    hostname: kafka-exporter
+    ports:
+      - target: 9308
+        published: 9308
+        protocol: tcp
+    command:
+      - "--kafka.server=kafka-broker-0:9092"
+      - "--kafka.server=kafka-broker-1:9092"
+      - "--kafka.server=kafka-broker-2:9092"
+    deploy:
+      restart_policy:
+        condition: on-failure
+      replicas: 1  # Replicated for load balancing
+    networks:
+      - poc_net
 
   # data-generation:
   #   image: dip.ad.atsonline.de:5000/cloud_evaluation/data-generation:latest
@@ -266,123 +267,125 @@ services:
   #   networks:
   #     - poc_net
 
-  # akhq:
-  #   image: tchiotludo/akhq
-  #   ports:
-  #     - target: 8080
-  #       published: 8080
-  #       protocol: tcp
-  #   environment:
-  #     AKHQ_CONFIGURATION: |
-  #       akhq:
-  #         connections:
-  #           kafka:
-  #             properties:
-  #               bootstrap.servers: "kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092"
-  #   deploy:
-  #     restart_policy:
-  #       condition: on-failure
-  #     replicas: 1
-  #   networks:
-  #     - poc_net
+  akhq:
+    image: tchiotludo/akhq
+    hostname: akhq
+    ports:
+      - target: 8080
+        published: 8080
+        protocol: tcp
+    environment:
+      AKHQ_CONFIGURATION: |
+        akhq:
+          connections:
+            kafka:
+              properties:
+                bootstrap.servers: "kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092"
+    deploy:
+      restart_policy:
+        condition: on-failure
+      replicas: 1
+    networks:
+      - poc_net
 
-  # mongo0:
-  #   image: mongo:8.0.4
-  #   command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
-  #   healthcheck:
-  #     test:
-  #       - CMD-SHELL
-  #       - "echo \"try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo0:27017',priority:2},{_id:1,host:'mongo1:27018',priority:1},{_id:2,host:'mongo2:27019',priority:0.5}]}) }\" | mongosh --port 27017 --quiet"
-  #     interval: 5s
-  #     timeout: 30s
-  #     retries: 30
-  #   ports:
-  #     - target: 27017
-  #       published: 27017
-  #       protocol: tcp
-  #   volumes:
-  #     - mongo0_data:/data/db
-  #   # logging:
-  #   #   driver: gelf
-  #   #   options:
-  #   #     gelf-address: tcp://host.docker.internal:5044
-  #   #     tag: "mongo0"
-  #   networks:
-  #     - poc_net
-  #   depends_on:
-  #     - logstash
+  mongo0:
+    image: mongo:8.0.4
+    hostname: mongo0
+    command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - "echo \"try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo0:27017',priority:2},{_id:1,host:'mongo1:27018',priority:1},{_id:2,host:'mongo2:27019',priority:0.5}]}) }\" | mongosh --port 27017 --quiet"
+      interval: 5s
+      timeout: 30s
+      retries: 30
+    ports:
+      - target: 27017
+        published: 27017
+        protocol: tcp
+    volumes:
+      - mongo0_data:/data/db
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: tcp://host.docker.internal:5044
+    #     tag: "mongo0"
+    networks:
+      - poc_net
+    depends_on:
+      - logstash
 
-  # mongo1:
-  #   image: mongo:8.0.4
-  #   command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27018"]
-  #   ports:
-  #     - target: 27018
-  #       published: 27018
-  #       protocol: tcp
-  #   volumes:
-  #     - mongo1_data:/data/db
-  #   # logging:
-  #   #   driver: gelf
-  #   #   options:
-  #   #     gelf-address: tcp://host.docker.internal:5044
-  #   #     tag: "mongo1"
-  #   networks:
-  #     - poc_net
-  #   depends_on:
-  #     - logstash
+  mongo1:
+    image: mongo:8.0.4
+    hostname: mongo1
+    command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27018"]
+    ports:
+      - target: 27018
+        published: 27018
+        protocol: tcp
+    volumes:
+      - mongo1_data:/data/db
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: tcp://host.docker.internal:5044
+    #     tag: "mongo1"
+    networks:
+      - poc_net
+    depends_on:
+      - logstash
 
-  # mongo2:
-  #   image: mongo:8.0.4
-  #   command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27019"]
-  #   ports:
-  #     - target: 27019
-  #       published: 27019
-  #       protocol: tcp
-  #   volumes:
-  #     - mongo2_data:/data/db
-  #   # logging:
-  #   #   driver: gelf
-  #   #   options:
-  #   #     gelf-address: tcp://host.docker.internal:5044
-  #   #     tag: "mongo2"
-  #   networks:
-  #     - poc_net
+  mongo2:
+    image: mongo:8.0.4
+    hostname: mongo2
+    command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27019"]
+    ports:
+      - target: 27019
+        published: 27019
+        protocol: tcp
+    volumes:
+      - mongo2_data:/data/db
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: tcp://host.docker.internal:5044
+    #     tag: "mongo2"
+    networks:
+      - poc_net
 
-  # mongo-express:
-    # image: mongo-express:latest
-    # ports:
-    #   - target: 8081
-    #     published: 8081
-    #     protocol: tcp
-    # environment:
-    #   - ME_CONFIG_MONGODB_URL=mongodb://mongo0:27017,mongo1:27018,mongo2:27019
-    # networks:
-    #   - poc_net
-    # # depends_on:
-    # #   - logstash
+  mongo-express:
+    image: mongo-express:latest
+    hostname: mongo-express
+    ports:
+      - target: 8081
+        published: 8081
+        protocol: tcp
+    environment:
+      - ME_CONFIG_MONGODB_URL=mongodb://mongo0:27017,mongo1:27018,mongo2:27019
+    networks:
+      - poc_net
 
-  # elasticsearch:
-  #   image: docker.elastic.co/elasticsearch/elasticsearch:8.15.1
-  #   environment:
-  #     - discovery.type=single-node
-  #     - xpack.security.enabled=false
-  #     - bootstrap.memory_lock=true
-  #     - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-  #   volumes:
-  #     - elastic_data:/usr/share/elasticsearch/data
-  #   ports:
-  #     - target: 9200
-  #       published: 9200
-  #       protocol: tcp
-  #   # logging:
-  #   #   driver: gelf
-  #   #   options:
-  #   #     gelf-address: tcp://host.docker.internal:5044
-  #   #     tag: "elasticsearch"
-  #   networks:
-  #     - poc_net
-  #   depends_on:
-  #     - logstash
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.1
+    hostname: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - elastic_data:/usr/share/elasticsearch/data
+    ports:
+      - target: 9200
+        published: 9200
+        protocol: tcp
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: tcp://host.docker.internal:5044
+    #     tag: "elasticsearch"
+    networks:
+      - poc_net
 
   # logstash:
   #   image: docker.elastic.co/logstash/logstash:8.15.1
@@ -442,12 +445,12 @@ volumes:
     driver: local
   kafka_data_2:
     driver: local
-  # mongo0_data:
-  #   driver: local
-  # mongo1_data:
-  #   driver: local
-  # mongo2_data:
-  #   driver: local
+  mongo0_data:
+    driver: local
+  mongo1_data:
+    driver: local
+  mongo2_data:
+    driver: local
   # grafana_data:
   #   driver: local
   # elastic_data:
