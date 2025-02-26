@@ -6,13 +6,13 @@ scrape_configs:
     static_configs:
       - targets: ['kafka-exporter:9308']
 
-  # - job_name: 'producer-ats'
-  #   static_configs:
-  #     - targets: ['producer-ats:5131']
+  - job_name: 'producer-ats'
+    static_configs:
+      - targets: ['producer-ats:5131']
 
-  # - job_name: 'consumer-ats'
-  #   static_configs:
-  #     - targets: ['consumer-ats:5121']
+  - job_name: 'consumer-ats'
+    static_configs:
+      - targets: ['consumer-ats:5121']
 
 # Not Implemented yet
   # - job_name: 'consumer-vds'
