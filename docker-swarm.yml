@@ -475,3 +475,4 @@ volumes:
 networks:
   poc_net:
     driver: overlay
+    attachable: true
