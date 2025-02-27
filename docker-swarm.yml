@@ -192,9 +192,11 @@ services:
 
   consumer-vds:
     image: dip.ad.atsonline.de:5000/cloud_evaluation/consumer:latest
-    # container_name: consumer-vds
+    container_name: consumer-vds
     ports:
-      - "5141:5141"
+      - target: 5141
+        published: 5141
+        protocol: tcp
     restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -331,7 +333,7 @@ services:
 
   mongo-express:
     image: mongo-express:latest
-    # hostname: mongo-express
+    hostname: mongo-express
     ports:
       - target: 8081
         published: 8081
