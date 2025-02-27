@@ -258,6 +258,53 @@ services:
       mongo2:
         condition: service_started
 
+  # producer-vds:
+  #   image: dip.ad.atsonline.de:5000/cloud_evaluation/vds-sample-server:latest
+  #   container_name: producer-vds
+  #   restart: always
+  #   ports:
+  #     - "50000:50000"
+  #     - "60000:60000"
+  #   environment:
+  #     - Port_IPv1=50000
+  #     - Port_SecurIP=60000
+  #     - Kafka__Brokers=kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092
+  #     - Kafka__Topic=vds-data
+  #   logging:
+  #     driver: gelf
+  #     options:
+  #       gelf-address: ${GELF_ADDRESS}
+  #       tag: "producer-vds"
+  #   depends_on:
+  #     - logstash
+
+  # consumer-vds:
+  #   image: dip.ad.atsonline.de:5000/cloud_evaluation/consumer:latest
+  #   container_name: consumer-vds
+  #   ports:
+  #     - "5141:5141"
+  #   restart: always
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #     - Kafka__Brokers=kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092
+  #     - Kafka__Consumer_Group=vds-group
+  #     - Kafka__Create_Topics__0=vds-data
+  #     - Kafka__Subscribe_Topics__0=vds-data
+  #     - MongoDB__ConnectionStrings="mongodb://mongo0:27017,mongo1:27018,mongo2:27019/?replicaSet=rs0
+  #   logging:
+  #     driver: gelf
+  #     options:
+  #       gelf-address: ${GELF_ADDRESS}
+  #       tag: "consumer-vds"
+  #   depends_on:
+  #     - logstash
+  #     - kafka-broker-0
+  #     - kafka-broker-1
+  #     - kafka-broker-2
+  #     - mongo0
+  #     - mongo1
+  #     - mongo2
+
   prometheus:
     image: prom/prometheus
     restart: on-failure
