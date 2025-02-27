@@ -168,7 +168,7 @@ services:
 
   producer-vds:
     image: dip.ad.atsonline.de:5000/cloud_evaluation/vds-sample-server:latest
-    # host: producer-vds
+    hostname: producer-vds
     restart: always
     ports:
       - "50000:50000"
@@ -192,7 +192,7 @@ services:
 
   consumer-vds:
     image: dip.ad.atsonline.de:5000/cloud_evaluation/consumer:latest
-    container_name: consumer-vds
+    hostname: consumer-vds
     ports:
       - target: 5141
         published: 5141
