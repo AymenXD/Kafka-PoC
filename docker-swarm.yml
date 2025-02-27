@@ -79,11 +79,11 @@ services:
   # Brokers
   kafka-broker-0:
     <<: *kafka-broker-base
-    hostname: kafka-broker-0
+    # hostname: kafka-broker-0
     environment:
       <<: *kafka-broker-env
       KAFKA_NODE_ID: 4
-      KAFKA_LISTENERS: PLAINTEXT://kafka-broker-0:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-0:9092
     volumes:
       - kafka_data_0:/var/lib/kafka/data
@@ -98,11 +98,11 @@ services:
 
   kafka-broker-1:
     <<: *kafka-broker-base
-    hostname: kafka-broker-1
+    # hostname: kafka-broker-1
     environment:
       <<: *kafka-broker-env
       KAFKA_NODE_ID: 5
-      KAFKA_LISTENERS: PLAINTEXT://kafka-broker-1:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-1:9092
     volumes:
       - kafka_data_1:/var/lib/kafka/data
@@ -117,11 +117,11 @@ services:
 
   kafka-broker-2:
     <<: *kafka-broker-base
-    hostname: kafka-broker-2
+    # hostname: kafka-broker-2
     environment:
       <<: *kafka-broker-env
       KAFKA_NODE_ID: 6
-      KAFKA_LISTENERS: PLAINTEXT://kafka-broker-2:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-2:9092
     volumes:
       - kafka_data_2:/var/lib/kafka/data
@@ -168,7 +168,7 @@ services:
 
   producer-vds:
     image: dip.ad.atsonline.de:5000/cloud_evaluation/vds-sample-server:latest
-    hostname: producer-vds
+    # hostname: producer-vds
     restart: always
     ports:
       - "50000:50000"
@@ -192,7 +192,7 @@ services:
 
   consumer-vds:
     image: dip.ad.atsonline.de:5000/cloud_evaluation/consumer:latest
-    hostname: consumer-vds
+    # hostname: consumer-vds
     ports:
       - "5141:5141"
     restart: always
