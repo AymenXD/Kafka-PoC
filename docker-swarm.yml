@@ -21,14 +21,7 @@ x-kafka-broker-base: &kafka-broker-base
     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
     KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
     KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-    # KAFKA_SSL_KEYSTORE_TYPE: ${KAFKA_SSL_KEYSTORE_TYPE}
-    # KAFKA_SSL_TRUSTSTORE_TYPE: ${KAFKA_SSL_TRUSTSTORE_TYPE}
     KAFKA_CONTROLLER_QUORUM_VOTERS: 0@kafka-controller-0:9093,1@kafka-controller-1:9093,2@kafka-controller-2:9093
-    # KAFKA_SSL_KEYSTORE_LOCATION: ${KAFKA_SSL_KEYSTORE_LOCATION}
-    # KAFKA_SSL_KEYSTORE_PASSWORD: ${KAFKA_SSL_KEYSTORE_PASSWORD}
-    # KAFKA_SSL_TRUSTSTORE_LOCATION: ${KAFKA_SSL_TRUSTSTORE_LOCATION}
-    # KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: ${KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM}
-    # KAFKA_SSL_CLIENT_AUTH: ${KAFKA_SSL_CLIENT_AUTH}
     KAFKA_LOG_DIRS: /var/lib/kafka/data
     KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
     KAFKA_DEFAULT_REPLICATION_FACTOR: 3
@@ -83,7 +76,7 @@ services:
     environment:
       <<: *kafka-broker-env
       KAFKA_NODE_ID: 4
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_LISTENERS: PLAINTEXT://kafka-broker-0:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-0:9092
     volumes:
       - kafka_data_0:/var/lib/kafka/data
@@ -102,7 +95,7 @@ services:
     environment:
       <<: *kafka-broker-env
       KAFKA_NODE_ID: 5
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_LISTENERS: PLAINTEXT://kafka-broker-1:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-1:9092
     volumes:
       - kafka_data_1:/var/lib/kafka/data
@@ -121,7 +114,7 @@ services:
     environment:
       <<: *kafka-broker-env
       KAFKA_NODE_ID: 6
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_LISTENERS: PLAINTEXT://kafka-broker-2:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-2:9092
     volumes:
       - kafka_data_2:/var/lib/kafka/data
@@ -138,9 +131,7 @@ services:
     image: danielqsj/kafka-exporter:v1.8.0
     hostname: kafka-exporter
     ports:
-      - target: 9308
-        published: 9308
-        protocol: tcp
+      - "9308:9308"
     command:
       - "--kafka.server=kafka-broker-0:9092"
       - "--kafka.server=kafka-broker-1:9092"
@@ -156,9 +147,7 @@ services:
     image: dip.ad.atsonline.de:5000/cloud_evaluation/data-generation:latest
     hostname: data-generation
     ports:
-      - target: 5247
-        published: 5247
-        protocol: tcp
+      - "5247:5247"
     deploy:
       restart_policy:
         condition: on-failure
@@ -176,6 +165,7 @@ services:
     environment:
       - Port_IPv1=50000
       - Port_SecurIP=60000
+      - Kafka__Use=true
       - Kafka__Brokers=kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092
       - Kafka__Topic=vds-data
     logging:
@@ -192,7 +182,7 @@ services:
 
   consumer-vds:
     image: dip.ad.atsonline.de:5000/cloud_evaluation/consumer:latest
-    # hostname: consumer-vds
+    hostname: consumer-vds
     ports:
       - "5141:5141"
     restart: always
@@ -219,9 +209,7 @@ services:
     image: prom/prometheus
     hostname: prometheus
     ports:
-      - target: 9090
-        published: 9090
-        protocol: tcp
+      - "9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     deploy:
@@ -235,9 +223,7 @@ services:
     image: grafana/grafana:11.5.2
     hostname: grafana
     ports:
-      - target: 3000
-        published: 3000
-        protocol: tcp
+      - "3000:3000"
     volumes:
       - grafana_data:/var/lib/grafana
     deploy:
@@ -251,9 +237,7 @@ services:
     image: tchiotludo/akhq
     hostname: akhq
     ports:
-      - target: 8080
-        published: 8080
-        protocol: tcp
+      - "8080:8080"
     environment:
       AKHQ_CONFIGURATION: |
         akhq:
@@ -280,9 +264,7 @@ services:
       timeout: 30s
       retries: 30
     ports:
-      - target: 27017
-        published: 27017
-        protocol: tcp
+      - "27017:27017"
     volumes:
       - mongo0_data:/data/db
     logging:
@@ -298,9 +280,7 @@ services:
     hostname: mongo1
     command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27018"]
     ports:
-      - target: 27018
-        published: 27018
-        protocol: tcp
+      - "27018:27018"
     volumes:
       - mongo1_data:/data/db
     logging:
@@ -316,9 +296,7 @@ services:
     hostname: mongo2
     command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27019"]
     ports:
-      - target: 27019
-        published: 27019
-        protocol: tcp
+      - "27019:27019"
     volumes:
       - mongo2_data:/data/db
     logging:
@@ -333,9 +311,7 @@ services:
     image: mongo-express:latest
     hostname: mongo-express
     ports:
-      - target: 8081
-        published: 8081
-        protocol: tcp
+      - "8081:8081"
     environment:
       - ME_CONFIG_MONGODB_URL=mongodb://mongo0:27017,mongo1:27018,mongo2:27019/?replicaSet=rs0
     networks:
@@ -352,9 +328,7 @@ services:
     volumes:
       - elastic_data:/usr/share/elasticsearch/data
     ports:
-      - target: 9200
-        published: 9200
-        protocol: tcp
+      - "9200:9200"
     logging:
       driver: gelf
       options:
@@ -369,9 +343,7 @@ services:
     volumes:
       - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
     ports:
-      - target: 5044
-        published: 5044
-        protocol: tcp
+      - "5044:5044"
     networks:
       - poc_net
 
@@ -383,9 +355,7 @@ services:
       - ELASTICSEARCH_USERNAME=admin
       - ELASTICSEARCH_PASSWORD=pass
     ports:
-      - target: 5601
-        published: 8082
-        protocol: tcp
+      - "8082:5601"
     volumes:
       - kibana_data:/usr/share/kibana/data
     networks:
@@ -408,9 +378,7 @@ services:
     image: portainer/portainer-ce:lts
     command: -H tcp://tasks.portainer-agent:9001 --tlsskipverify
     ports:
-      - target: 9000
-        published: 9000
-        protocol: tcp
+      - "9000:9000"
     volumes:
       - portainer_data:/data
     networks:
