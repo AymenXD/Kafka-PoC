@@ -72,7 +72,7 @@ services:
   # Brokers
   kafka-broker-0:
     <<: *kafka-broker-base
-    hostname: kafka-broker-0
+    # hostname: kafka-broker-0
     environment:
       <<: *kafka-broker-env
       KAFKA_NODE_ID: 4
@@ -91,7 +91,7 @@ services:
 
   kafka-broker-1:
     <<: *kafka-broker-base
-    hostname: kafka-broker-1
+    # hostname: kafka-broker-1
     environment:
       <<: *kafka-broker-env
       KAFKA_NODE_ID: 5
@@ -110,7 +110,7 @@ services:
 
   kafka-broker-2:
     <<: *kafka-broker-base
-    hostname: kafka-broker-2
+    # hostname: kafka-broker-2
     environment:
       <<: *kafka-broker-env
       KAFKA_NODE_ID: 6
