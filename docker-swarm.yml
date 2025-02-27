@@ -73,10 +73,12 @@ services:
   kafka-broker-0:
     <<: *kafka-broker-base
     # hostname: kafka-broker-0
+    ports:
+      - "9093:9092"
     environment:
       <<: *kafka-broker-env
       KAFKA_NODE_ID: 4
-      KAFKA_LISTENERS: PLAINTEXT://kafka-broker-0:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-0:9092
     volumes:
       - kafka_data_0:/var/lib/kafka/data
@@ -92,10 +94,12 @@ services:
   kafka-broker-1:
     <<: *kafka-broker-base
     # hostname: kafka-broker-1
+    ports:
+      - "9094:9092"
     environment:
       <<: *kafka-broker-env
       KAFKA_NODE_ID: 5
-      KAFKA_LISTENERS: PLAINTEXT://kafka-broker-1:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-1:9092
     volumes:
       - kafka_data_1:/var/lib/kafka/data
@@ -111,10 +115,12 @@ services:
   kafka-broker-2:
     <<: *kafka-broker-base
     # hostname: kafka-broker-2
+    ports:
+      - "9095:9092"
     environment:
       <<: *kafka-broker-env
       KAFKA_NODE_ID: 6
-      KAFKA_LISTENERS: PLAINTEXT://kafka-broker-2:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-2:9092
     volumes:
       - kafka_data_2:/var/lib/kafka/data
@@ -182,13 +188,13 @@ services:
 
   consumer-vds:
     image: dip.ad.atsonline.de:5000/cloud_evaluation/consumer:latest
-    hostname: consumer-vds
+    # hostname: consumer-vds
     ports:
       - "5141:5141"
     restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - Kafka__Brokers=kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092
+      - Kafka__Brokers=kafka-broker-0:9093,kafka-broker-1:9094,kafka-broker-2:9095
       - Kafka__Consumer_Group=vds-group
       - Kafka__Create_Topics__0=vds-data
       - Kafka__Subscribe_Topics__0=vds-data
