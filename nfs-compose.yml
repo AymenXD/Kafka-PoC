@@ -3,26 +3,22 @@ version: "3.8"
 
 services:
 
-  prometheus:
-    image: prom/prometheus
-    hostname: prometheus
-    ports:
-      - "9090:9090"
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.15.1
+    hostname: logstash
     volumes:
-      - prometheus:/etc/prometheus
-    deploy:
-      restart_policy:
-        condition: on-failure
-      replicas: 1
-
+      - logstash_conf:/usr/share/logstash/pipeline/
+    ports:
+      - "5044:5044"
+    networks:
+      - poc_net
 
 
 
 volumes:
-  prometheus:
+  logstash_conf:
     driver: local
     driver_opts:
       type: "cifs"
       o: "username=GMS-User,password=ATS1g2m3s!"
       device: "//10.101.102.100/GMS/poc/"
-
