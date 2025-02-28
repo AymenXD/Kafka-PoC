@@ -23,6 +23,6 @@ volumes:
     driver: local
     driver_opts:
       type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!,domain=svrFsTest25v544,nolock,soft,rw,file_mode=0777,dir_mode=0777"
-      device: "//10.101.102.100/GMS/poc"
+      o: "username=GMS-User,password=ATS1g2m3s!"
+      device: "//10.101.102.100/GMS/poc/"
 
