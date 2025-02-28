@@ -347,7 +347,7 @@ services:
     image: docker.elastic.co/logstash/logstash:8.15.1
     hostname: logstash
     volumes:
-      - logstash_conf:/usr/share/logstash/pipeline/logstash.conf
+      - logstash_conf:/usr/share/logstash/pipeline/
     ports:
       - "5044:5044"
     networks:
@@ -433,7 +433,7 @@ volumes:
     driver_opts:
       type: "cifs"
       o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/logstash.conf"
+      device: "//10.101.102.100/GMS/poc/"
 
 networks:
   poc_net:
