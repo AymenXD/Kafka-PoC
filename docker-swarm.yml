@@ -194,7 +194,7 @@ services:
     restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - Kafka__Brokers=kafka-broker-0:9093,kafka-broker-1:9094,kafka-broker-2:9095
+      - Kafka__Brokers=kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092
       - Kafka__Consumer_Group=vds-group
       - Kafka__Create_Topics__0=vds-data
       - Kafka__Subscribe_Topics__0=vds-data
@@ -217,7 +217,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_config:/etc/prometheus
     deploy:
       restart_policy:
         condition: on-failure
@@ -347,7 +347,7 @@ services:
     image: docker.elastic.co/logstash/logstash:8.15.1
     hostname: logstash
     volumes:
-      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - logstash_conf:/usr/share/logstash/pipeline/logstash.conf
     ports:
       - "5044:5044"
     networks:
@@ -422,6 +422,18 @@ volumes:
     driver: local
   portainer_data:
     driver: local
+  prometheus_config:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=10.101.102.100,rw"
+      device: ":/mnt/nfs/gms-share/poc"
+  logstash_conf:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=10.101.102.100,rw"
+      device: ":/mnt/nfs/gms-share/poc/logstash.conf"
 
 networks:
   poc_net:
