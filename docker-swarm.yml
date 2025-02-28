@@ -86,7 +86,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: "tcp://logstash:5044"
+        gelf-address: "tcp://10.101.102.84:5044"
         tag: "kafka-broker-0"
     networks:
       - poc_net
@@ -107,7 +107,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: "tcp://logstash:5044"
+        gelf-address: "tcp://10.101.102.84:5044"
         tag: "kafka-broker-1"
     networks:
       - poc_net
@@ -128,7 +128,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: "tcp://logstash:5044"
+        gelf-address: "tcp://10.101.102.84:5044"
         tag: "kafka-broker-2"
     networks:
       - poc_net
@@ -177,7 +177,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: "tcp://logstash:5044"
+        gelf-address: "tcp://10.101.102.84:5044"
         tag: "producer-vds"
     deploy:
       restart_policy:
@@ -202,7 +202,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: "tcp://logstash:5044"
+        gelf-address: "tcp://10.101.102.84:5044"
         tag: "consumer-vds"
     deploy:
       restart_policy:
@@ -276,7 +276,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: "tcp://logstash:5044"
+        gelf-address: "tcp://10.101.102.84:5044"
         tag: "mongo0"
     networks:
       - poc_net
@@ -292,7 +292,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: "tcp://logstash:5044"
+        gelf-address: "tcp://10.101.102.84:5044"
         tag: "mongo1"
     networks:
       - poc_net
@@ -308,7 +308,7 @@ services:
     logging:
       driver: gelf
       options:
-        gelf-address: "tcp://logstash:5044"
+        gelf-address: "tcp://10.101.102.84:5044"
         tag: "mongo2"
     networks:
       - poc_net
@@ -347,6 +347,11 @@ services:
       - "5044:5044"
     networks:
       - poc_net
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.15.1
@@ -361,6 +366,9 @@ services:
       - kibana_data:/usr/share/kibana/data
     networks:
       - poc_net
+    deploy:
+      mode: replicated
+      replicas: 1
 
   # Portainer for Docker management
   portainer-agent:
