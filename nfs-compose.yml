@@ -1,0 +1,28 @@
+version: "3.8"
+
+
+services:
+
+  prometheus:
+    image: prom/prometheus
+    hostname: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - prometheus:/etc/prometheus
+    deploy:
+      restart_policy:
+        condition: on-failure
+      replicas: 1
+
+
+
+
+volumes:
+  prometheus:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=10.101.102.100,nolock,soft,rw"
+      device: ":/mnt/nfs/gms-share/poc"
+
