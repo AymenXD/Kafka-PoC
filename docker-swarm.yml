@@ -425,15 +425,15 @@ volumes:
   prometheus_conf:
     driver: local
     driver_opts:
-      type: "nfs"
-      o: "addr=10.101.102.100,rw"
-      device: ":/mnt/nfs/gms-share/poc"
+      type: "cifs"
+      o: "username=GMS-User,password=ATS1g2m3s!"
+      device: "//10.101.102.100/GMS/poc/"
   logstash_conf:
     driver: local
     driver_opts:
-      type: "nfs"
-      o: "addr=10.101.102.100,rw"
-      device: ":/mnt/nfs/gms-share/poc/logstash.conf"
+      type: "cifs"
+      o: "username=GMS-User,password=ATS1g2m3s!"
+      device: "//10.101.102.100/GMS/poc/logstash.conf"
 
 networks:
   poc_net:
