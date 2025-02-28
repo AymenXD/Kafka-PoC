@@ -83,11 +83,11 @@ services:
     volumes:
       - kafka_data_0:/var/lib/kafka/data
       # - ./Certificates:/etc/kafka/secrets
-    logging:
-      driver: gelf
-      options:
-        gelf-address: "tcp://localhost:5044"
-        tag: "kafka-broker-0"
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: "tcp://localhost:5044"
+    #     tag: "kafka-broker-0"
     networks:
       - poc_net
 
@@ -104,11 +104,11 @@ services:
     volumes:
       - kafka_data_1:/var/lib/kafka/data
       # - ./Certificates:/etc/kafka/secrets
-    logging:
-      driver: gelf
-      options:
-        gelf-address: "tcp://localhost:5044"
-        tag: "kafka-broker-1"
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: "tcp://localhost:5044"
+    #     tag: "kafka-broker-1"
     networks:
       - poc_net
 
@@ -125,11 +125,11 @@ services:
     volumes:
       - kafka_data_2:/var/lib/kafka/data
       # - ./Certificates:/etc/kafka/secrets
-    logging:
-      driver: gelf
-      options:
-        gelf-address: "tcp://localhost:5044"
-        tag: "kafka-broker-2"
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: "tcp://localhost:5044"
+    #     tag: "kafka-broker-2"
     networks:
       - poc_net
 
@@ -174,11 +174,11 @@ services:
       - Kafka__Use=true
       - Kafka__Brokers=kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092
       - Kafka__Topic=vds-data
-    logging:
-      driver: gelf
-      options:
-        gelf-address: "tcp://localhost:5044"
-        tag: "producer-vds"
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: "tcp://localhost:5044"
+    #     tag: "producer-vds"
     deploy:
       restart_policy:
         condition: on-failure
@@ -198,12 +198,12 @@ services:
       - Kafka__Consumer_Group=vds-group
       - Kafka__Create_Topics__0=vds-data
       - Kafka__Subscribe_Topics__0=vds-data
-      - MongoDB__ConnectionStrings="mongodb://mongo0:27017,mongo1:27018,mongo2:27019/?replicaSet=rs0
-    logging:
-      driver: gelf
-      options:
-        gelf-address: "tcp://localhost:5044"
-        tag: "consumer-vds"
+      - MongoDB__ConnectionStrings="mongodb://mongo0:27017,mongo1:27018,mongo2:27019/?replicaSet=rs0"
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: "tcp://localhost:5044"
+    #     tag: "consumer-vds"
     deploy:
       restart_policy:
         condition: on-failure
@@ -273,11 +273,11 @@ services:
       - "27017:27017"
     volumes:
       - mongo0_data:/data/db
-    logging:
-      driver: gelf
-      options:
-        gelf-address: "tcp://localhost:5044"
-        tag: "mongo0"
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: "tcp://localhost:5044"
+    #     tag: "mongo0"
     networks:
       - poc_net
 
@@ -289,11 +289,11 @@ services:
       - "27018:27018"
     volumes:
       - mongo1_data:/data/db
-    logging:
-      driver: gelf
-      options:
-        gelf-address: "tcp://localhost:5044"
-        tag: "mongo1"
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: "tcp://localhost:5044"
+    #     tag: "mongo1"
     networks:
       - poc_net
 
@@ -305,11 +305,11 @@ services:
       - "27019:27019"
     volumes:
       - mongo2_data:/data/db
-    logging:
-      driver: gelf
-      options:
-        gelf-address: "tcp://localhost:5044"
-        tag: "mongo2"
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: "tcp://localhost:5044"
+    #     tag: "mongo2"
     networks:
       - poc_net
 
@@ -335,11 +335,11 @@ services:
       - elastic_data:/usr/share/elasticsearch/data
     ports:
       - "9200:9200"
-    logging:
-      driver: gelf
-      options:
-        gelf-address: "tcp://localhost:5044"
-        tag: "elasticsearch"
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: "tcp://localhost:5044"
+    #     tag: "elasticsearch"
     networks:
       - poc_net
 
