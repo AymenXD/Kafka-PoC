@@ -217,7 +217,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - prometheus_config:/etc/prometheus
+      - prometheus_conf:/etc/prometheus
     deploy:
       restart_policy:
         condition: on-failure
@@ -422,7 +422,7 @@ volumes:
     driver: local
   portainer_data:
     driver: local
-  prometheus_config:
+  prometheus_conf:
     driver: local
     driver_opts:
       type: "nfs"
