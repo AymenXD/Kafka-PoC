@@ -22,7 +22,7 @@ volumes:
   prometheus:
     driver: local
     driver_opts:
-      type: "nfs"
-      o: "addr=10.101.102.100,nolock,soft,rw"
-      device: ":/mnt/nfs/gms-share/poc"
+      type: "cifs"
+      o: "username=GMS-User,password=ATS1g2m3s!,domain=svrFsTest25v544,nolock,soft,rw,file_mode=0777,dir_mode=0777"
+      device: "//10.101.102.100/GMS/poc"
 
