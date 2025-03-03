@@ -443,6 +443,8 @@ volumes:
     driver: local
   portainer_data:
     driver: local
+  keycloak_data:
+    driver: local
   prometheus_conf:
     driver: local
     driver_opts:
