@@ -254,10 +254,10 @@ services:
     - GF_AUTH_GENERIC_OAUTH_CLIENT_ID=grafana
     - GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET=e48uhS8zOSpYyIEICXNbL2ZPACCK8a57
     - GF_AUTH_GENERIC_OAUTH_SCOPES="openid profile email"
-    - GF_AUTH_GENERIC_OAUTH_AUTH_URL=http://10.101.102.84:8083/realms/Kafka-Auth/protocol/openid-connect/auth
-    - GF_AUTH_GENERIC_OAUTH_TOKEN_URL=http://keycloak:8080/realms/Kafka-Auth/protocol/openid-connect/token
-    - GF_AUTH_GENERIC_OAUTH_API_URL=http:///keycloak:8080/realms/Kafka-Auth/protocol/openid-connect/userinfo
-    - GF_AUTH_GENERIC_OAUTH_SIGNOUT_REDIRECT_URL=http://10.101.102.84:8083/realms/Kafka-Auth/protocol/openid-connect/logout?post_logout_redirect_uri=http://10.101.102.84:3000/login/generic_oauth/
+    - GF_AUTH_GENERIC_OAUTH_AUTH_URL=http://10.101.102.84:8083/realms/GMS/protocol/openid-connect/auth
+    - GF_AUTH_GENERIC_OAUTH_TOKEN_URL=http://keycloak:8080/realms/GMS/protocol/openid-connect/token
+    - GF_AUTH_GENERIC_OAUTH_API_URL=http:///keycloak:8080/realms/GMS/protocol/openid-connect/userinfo
+    - GF_AUTH_GENERIC_OAUTH_SIGNOUT_REDIRECT_URL=http://10.101.102.84:8083/realms/GMS/protocol/openid-connect/logout?post_logout_redirect_uri=http://10.101.102.84:3000/login/generic_oauth/
     - GF_AUTH_GENERIC_OAUTH_TLS_SKIP_VERIFY_INSECURE=true
     # - GF_SERVER_ROOT_URL=${GF_SERVER_ROOT_URL}
     # - GF_SERVER_DOMAIN=${GF_SERVER_DOMAIN}
