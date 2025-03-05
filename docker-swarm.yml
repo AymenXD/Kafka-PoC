@@ -496,13 +496,13 @@ volumes:
     driver_opts:
       type: "cifs"
       o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/"
+      device: "//10.101.102.100/GMS/poc/prometheus/"
   logstash_conf:
     driver: local
     driver_opts:
       type: "cifs"
       o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/"
+      device: "//10.101.102.100/GMS/poc/logstash/"
 
 networks:
   poc_net:
