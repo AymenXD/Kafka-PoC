@@ -164,7 +164,6 @@ services:
   producer-vds:
     image: dip.ad.atsonline.de:5000/cloud_evaluation/vds-sample-server:latest
     # hostname: producer-vds
-    restart: always
     ports:
       - "50000:50000"
       - "60000:60000"
@@ -191,7 +190,6 @@ services:
     # hostname: consumer-vds
     ports:
       - "5141:5141"
-    restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - Kafka__Brokers=kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092
@@ -437,88 +435,32 @@ services:
 volumes:
   kafka_controller_data_0:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/"
   kafka_controller_data_1:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/"
   kafka_controller_data_2:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/"
   kafka_data_0:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/"
   kafka_data_1:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/"
   kafka_data_2:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/"
   mongo0_data:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/"
   mongo1_data:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/"
   mongo2_data:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/"
   grafana_data:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/"
   elastic_data:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/"
   kibana_data:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/"
   portainer_data:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/"
   keycloak_data:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/"
   prometheus_conf:
     driver: local
     driver_opts:
