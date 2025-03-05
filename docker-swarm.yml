@@ -211,6 +211,24 @@ services:
     networks:
       - poc_net
 
+  webapi:
+    image: dip.ad.atsonline.de:5000/cloud_evaluation/webapi:latest
+    hostname: webapi
+    ports:
+      - "5046:5046"
+    environment:
+      - MongoDbSettings__ConnectionString=mongodb://mongo0:27017,mongo1:27018,mongo2:27019/?replicaSet=rs0
+      - MongoDbSettings__DatabaseName=KafkaData
+      - MongoDbSettings__CollectionName=KafkaEntries
+      - MongoDbSettings__CompanyId=vds-data
+    deploy:
+      restart_policy:
+        condition: on-failure
+      replicas: 1
+    networks:
+      - poc_net
+
+
   prometheus:
     image: prom/prometheus
     hostname: prometheus
@@ -239,24 +257,24 @@ services:
     networks:
       - poc_net
 
-  akhq:
-    image: tchiotludo/akhq
-    hostname: akhq
-    ports:
-      - "8080:8080"
-    environment:
-      AKHQ_CONFIGURATION: |
-        akhq:
-          connections:
-            kafka:
-              properties:
-                bootstrap.servers: "kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092"
-    deploy:
-      restart_policy:
-        condition: on-failure
-      replicas: 1
-    networks:
-      - poc_net
+  # akhq:
+  #   image: tchiotludo/akhq
+  #   hostname: akhq
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     AKHQ_CONFIGURATION: |
+  #       akhq:
+  #         connections:
+  #           kafka:
+  #             properties:
+  #               bootstrap.servers: "kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092"
+  #   deploy:
+  #     restart_policy:
+  #       condition: on-failure
+  #     replicas: 1
+  #   networks:
+  #     - poc_net
 
   mongo0:
     image: mongo:8.0.4
