@@ -12,6 +12,8 @@ x-kafka-controller-base: &kafka-controller-base
   deploy:
     restart_policy:
       condition: any
+    placement:
+        constraints: [node.platform.os == linux]
 
 # YAML Extension for Kafka Brokers (base configuration)
 x-kafka-broker-base: &kafka-broker-base
@@ -30,6 +32,8 @@ x-kafka-broker-base: &kafka-broker-base
   deploy:
     restart_policy:
       condition: any
+    placement:
+        constraints: [node.platform.os == linux]
 
 services:
   # Controllers
@@ -83,11 +87,11 @@ services:
     volumes:
       - kafka_data_0:/var/lib/kafka/data
       # - ./Certificates:/etc/kafka/secrets
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: "tcp://10.101.102.84:5044"
-    #     tag: "kafka-broker-0"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "tcp://10.101.102.84:5044"
+        tag: "kafka-broker-0"
     networks:
       - poc_net
 
@@ -104,11 +108,11 @@ services:
     volumes:
       - kafka_data_1:/var/lib/kafka/data
       # - ./Certificates:/etc/kafka/secrets
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: "tcp://10.101.102.84:5044"
-    #     tag: "kafka-broker-1"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "tcp://10.101.102.84:5044"
+        tag: "kafka-broker-1"
     networks:
       - poc_net
 
@@ -125,11 +129,11 @@ services:
     volumes:
       - kafka_data_2:/var/lib/kafka/data
       # - ./Certificates:/etc/kafka/secrets
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: "tcp://10.101.102.84:5044"
-    #     tag: "kafka-broker-2"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "tcp://10.101.102.84:5044"
+        tag: "kafka-broker-2"
     networks:
       - poc_net
 
@@ -146,6 +150,8 @@ services:
       restart_policy:
         condition: on-failure
       replicas: 1  # Replicated for load balancing
+      placement:
+        constraints: [node.platform.os == linux]
     networks:
       - poc_net
 
@@ -158,6 +164,8 @@ services:
       restart_policy:
         condition: on-failure
       replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
     networks:
       - poc_net
 
@@ -173,15 +181,17 @@ services:
       - Kafka__Use=true
       - Kafka__Brokers=kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092
       - Kafka__Topic=vds-data
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: "tcp://10.101.102.84:5044"
-    #     tag: "producer-vds"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "tcp://10.101.102.84:5044"
+        tag: "producer-vds"
     deploy:
       restart_policy:
         condition: on-failure
       replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
     networks:
       - poc_net
 
@@ -197,15 +207,17 @@ services:
       - Kafka__Create_Topics__0=vds-data
       - Kafka__Subscribe_Topics__0=vds-data
       - MongoDB__ConnectionStrings="mongodb://mongo0:27017,mongo1:27018,mongo2:27019/?replicaSet=rs0"
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: "tcp://10.101.102.84:5044"
-    #     tag: "consumer-vds"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "tcp://10.101.102.84:5044"
+        tag: "consumer-vds"
     deploy:
       restart_policy:
         condition: on-failure
       replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
     networks:
       - poc_net
 
@@ -223,9 +235,10 @@ services:
       restart_policy:
         condition: on-failure
       replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
     networks:
       - poc_net
-
 
   prometheus:
     image: prom/prometheus
@@ -238,6 +251,8 @@ services:
       restart_policy:
         condition: on-failure
       replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
     networks:
       - poc_net
 
@@ -277,32 +292,29 @@ services:
       restart_policy:
         condition: on-failure
       replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
     networks:
       - poc_net
 
-  akhq:
-    image: tchiotludo/akhq
-    hostname: akhq
-    ports:
-      - "8080:8080"
-    environment:
-      AKHQ_CONFIGURATION: |
-        akhq:
-          connections:
-            kafka:
-              properties:
-                bootstrap.servers: "kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092"
-    logging:
-      driver: gelf
-      options:
-        gelf-address: "tcp://10.101.102.84:5044"
-        tag: "mongo0"
-    deploy:
-      restart_policy:
-        condition: on-failure
-      replicas: 1
-    networks:
-      - poc_net
+  # akhq:
+  #   image: tchiotludo/akhq
+  #   hostname: akhq
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     AKHQ_CONFIGURATION: |
+  #       akhq:
+  #         connections:
+  #           kafka:
+  #             properties:
+  #               bootstrap.servers: "kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092"
+  #   deploy:
+  #     restart_policy:
+  #       condition: on-failure
+  #     replicas: 1
+  #   networks:
+  #     - poc_net
 
   mongo0:
     image: mongo:8.0.4
@@ -319,13 +331,18 @@ services:
       - "27017:27017"
     volumes:
       - mongo0_data:/data/db
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: "tcp://10.101.102.84:5044"
-    #     tag: "mongo0"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "tcp://10.101.102.84:5044"
+        tag: "mongo0"
     networks:
       - poc_net
+    deploy:
+      restart_policy:
+        condition: on-failure
+      placement:
+          constraints: [node.platform.os == linux]
 
   mongo1:
     image: mongo:8.0.4
@@ -335,11 +352,16 @@ services:
       - "27018:27018"
     volumes:
       - mongo1_data:/data/db
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: "tcp://10.101.102.84:5044"
-    #     tag: "mongo1"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "tcp://10.101.102.84:5044"
+        tag: "mongo1"
+    deploy:
+      restart_policy:
+        condition: on-failure
+      placement:
+          constraints: [node.platform.os == linux]
     networks:
       - poc_net
 
@@ -351,11 +373,16 @@ services:
       - "27019:27019"
     volumes:
       - mongo2_data:/data/db
-    # logging:
-    #   driver: gelf
-    #   options:
-    #     gelf-address: "tcp://10.101.102.84:5044"
-    #     tag: "mongo2"
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "tcp://10.101.102.84:5044"
+        tag: "mongo2"
+    deploy:
+      restart_policy:
+        condition: on-failure
+      placement:
+          constraints: [node.platform.os == linux]
     networks:
       - poc_net
 
@@ -366,6 +393,11 @@ services:
       - "8081:8081"
     environment:
       - ME_CONFIG_MONGODB_URL=mongodb://mongo0:27017,mongo1:27018,mongo2:27019/?replicaSet=rs0
+    deploy:
+      restart_policy:
+        condition: on-failure
+      placement:
+          constraints: [node.platform.os == linux]
     networks:
       - poc_net
 
@@ -381,6 +413,11 @@ services:
       - elastic_data:/usr/share/elasticsearch/data
     ports:
       - "9200:9200"
+    deploy:
+      restart_policy:
+        condition: on-failure
+      placement:
+          constraints: [node.platform.os == linux]
     networks:
       - poc_net
 
@@ -395,6 +432,8 @@ services:
       - poc_net
     deploy:
       mode: replicated
+      restart_policy:
+        condition: on-failure
       replicas: 1
       placement:
         constraints: [node.role == manager]
@@ -414,7 +453,11 @@ services:
       - poc_net
     deploy:
       mode: replicated
+      restart_policy:
+        condition: on-failure
       replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.1.1
@@ -433,6 +476,10 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.platform.os == linux]
 
   # Portainer for Docker management
   portainer-agent:
