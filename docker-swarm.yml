@@ -267,7 +267,7 @@ services:
     - GF_AUTH_GENERIC_OAUTH_ENABLED=true
     - GF_AUTH_OAUTH_ALLOW_INSECURE_EMAIL=true
     - GF_AUTH_GENERIC_OAUTH_CLIENT_ID=grafana
-    - GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET=e48uhS8zOSpYyIEICXNbL2ZPACCK8a57
+    - GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET=e1klkAwRG2eHPqt95uNDM11VO3uuvGvO
     - GF_AUTH_GENERIC_OAUTH_SCOPES="openid profile email"
     - GF_AUTH_GENERIC_OAUTH_AUTH_URL=http://10.101.102.84:8083/realms/GMS/protocol/openid-connect/auth
     - GF_AUTH_GENERIC_OAUTH_TOKEN_URL=http://keycloak:8080/realms/GMS/protocol/openid-connect/token
@@ -584,10 +584,6 @@ volumes:
       device: "//10.101.102.100/GMS/poc/kibana/"
   portainer_data:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/portainer/"
   keycloak_data:
     driver: local
     driver_opts:
