@@ -224,7 +224,7 @@ services:
       test: ["CMD", "sh", "-c", "nc -z kafka-broker-0 9092 && nc -z kafka-broker-1 9092 && nc -z kafka-broker-2 9092"]
       interval: 30s
       timeout: 10s
-      retries: 3
+      retries: 5
 
   webapi:
     image: dip.ad.atsonline.de:5000/cloud_evaluation/webapi:latest
@@ -517,84 +517,84 @@ services:
 volumes:
   kafka_controller_data_0:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/kafka/"
+    # driver_opts:
+    #   type: "cifs"
+    #   o: "username=GMS-User,password=ATS1g2m3s!"
+    #   device: "//10.101.102.100/GMS/poc/kafka/"
   kafka_controller_data_1:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/kafka/"
+    # driver_opts:
+    #   type: "cifs"
+    #   o: "username=GMS-User,password=ATS1g2m3s!"
+    #   device: "//10.101.102.100/GMS/poc/kafka/"
   kafka_controller_data_2:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/kafka/"
+    # driver_opts:
+    #   type: "cifs"
+    #   o: "username=GMS-User,password=ATS1g2m3s!"
+    #   device: "//10.101.102.100/GMS/poc/kafka/"
   kafka_data_0:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/kafka/"
+    # driver_opts:
+    #   type: "cifs"
+    #   o: "username=GMS-User,password=ATS1g2m3s!"
+    #   device: "//10.101.102.100/GMS/poc/kafka/"
   kafka_data_1:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/kafka/"
+    # driver_opts:
+    #   type: "cifs"
+    #   o: "username=GMS-User,password=ATS1g2m3s!"
+    #   device: "//10.101.102.100/GMS/poc/kafka/"
   kafka_data_2:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/kafka/"
+    # driver_opts:
+    #   type: "cifs"
+    #   o: "username=GMS-User,password=ATS1g2m3s!"
+    #   device: "//10.101.102.100/GMS/poc/kafka/"
   mongo0_data:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/mongo/"
+    # driver_opts:
+    #   type: "cifs"
+    #   o: "username=GMS-User,password=ATS1g2m3s!"
+    #   device: "//10.101.102.100/GMS/poc/mongo/"
   mongo1_data:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/mongo/"
+    # driver_opts:
+    #   type: "cifs"
+    #   o: "username=GMS-User,password=ATS1g2m3s!"
+    #   device: "//10.101.102.100/GMS/poc/mongo/"
   mongo2_data:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/mongo/"
+    # driver_opts:
+    #   type: "cifs"
+    #   o: "username=GMS-User,password=ATS1g2m3s!"
+    #   device: "//10.101.102.100/GMS/poc/mongo/"
   grafana_data:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/grafana/"
+    # driver_opts:
+    #   type: "cifs"
+    #   o: "username=GMS-User,password=ATS1g2m3s!"
+    #   device: "//10.101.102.100/GMS/poc/grafana/"
   elastic_data:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/elastic/"
+    # driver_opts:
+    #   type: "cifs"
+    #   o: "username=GMS-User,password=ATS1g2m3s!"
+    #   device: "//10.101.102.100/GMS/poc/elastic/"
   kibana_data:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/kibana/"
+    # driver_opts:
+    #   type: "cifs"
+    #   o: "username=GMS-User,password=ATS1g2m3s!"
+    #   device: "//10.101.102.100/GMS/poc/kibana/"
   portainer_data:
     driver: local
   keycloak_data:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/keycloak/"
+    # driver_opts:
+    #   type: "cifs"
+    #   o: "username=GMS-User,password=ATS1g2m3s!"
+    #   device: "//10.101.102.100/GMS/poc/keycloak/"
   prometheus_conf:
     driver: local
     driver_opts:
