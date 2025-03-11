@@ -170,7 +170,7 @@ services:
       - poc_net
 
   producer-vds:
-    image: dip.ad.atsonline.de:5000/cloud_evaluation/vds-sample-server:latest
+    image: vds-sample-server:windows
     # hostname: producer-vds
     ports:
       - "50000:50000"
@@ -191,7 +191,7 @@ services:
         condition: on-failure
       replicas: 1
       placement:
-        constraints: [node.platform.os == linux]
+        constraints: [node.platform.os == windows]
     networks:
       - poc_net
 
