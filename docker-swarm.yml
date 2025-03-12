@@ -227,6 +227,7 @@ services:
     ports:
       - "5185:5185"
     environment:
+      - ASPNETCORE_ENVIRONMENT=Development
       - ApiSettings__BaseUrl=http://10.101.102.84:5046/
       - ExternalUrls__GrafanaUrl=http://10.101.102.84:3000
       - ExternalUrls__KibanaUrl=http://10.101.102.84:8082
