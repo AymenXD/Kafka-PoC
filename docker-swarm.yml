@@ -199,7 +199,7 @@ services:
     image: dip.ad.atsonline.de:5000/cloud_evaluation/consumer:latest
     hostname: consumer-vds
     ports:
-      - "5141:5141"
+      - "5121:5121"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - Kafka__Brokers=kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092
