@@ -228,17 +228,17 @@ services:
       - "5185:5185"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ApiSettings__BaseUrl=http://webapi:5046/
-      - ExternalUrls__GrafanaUrl=http://grafana:3000
-      - ExternalUrls__KibanaUrl=http://kibana:5601
-      - ExternalUrls__PortainerUrl=vds-http://portainer:9000
-      - Keycloak__Authority=http://keycloak:8080/realms/GMS
+      - ApiSettings__BaseUrl=http://10.101.102.84:5046/
+      - ExternalUrls__GrafanaUrl=http://10.101.102.84:3000
+      - ExternalUrls__KibanaUrl=http://10.101.102.84:8082
+      - ExternalUrls__PortainerUrl=vds-http://10.101.102.84:9000
+      - Keycloak__Authority=http://10.101.102.84:8083/realms/GMS
       - Keycloak__ClientId=dashboard
       - Keycloak__ClientSecret=PwMaRz1sccnHZIq4CD4yOqWuhLIl5wlA
     deploy:
       restart_policy:
         condition: on-failure
-      replicas: 3
+      replicas: 1
       placement:
         constraints: [node.platform.os == linux]
     networks:
