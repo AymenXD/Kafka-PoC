@@ -188,7 +188,7 @@ services:
         tag: "producer-vds"
     deploy:
       restart_policy:
-        condition: always
+        condition: on-failure
       replicas: 1
       placement:
         constraints: [node.platform.os == windows]
@@ -214,7 +214,7 @@ services:
         tag: "consumer-vds"
     deploy:
       restart_policy:
-        condition: always
+        condition: on-failure
       replicas: 1
       placement:
         constraints: [node.platform.os == linux]
