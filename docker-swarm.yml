@@ -267,7 +267,7 @@ services:
     - GF_AUTH_GENERIC_OAUTH_ENABLED=true
     - GF_AUTH_OAUTH_ALLOW_INSECURE_EMAIL=true
     - GF_AUTH_GENERIC_OAUTH_CLIENT_ID=grafana
-    - GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET=e1klkAwRG2eHPqt95uNDM11VO3uuvGvO
+    - GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET=rDxobnfffqZxrix8RQP2YVSLpo1eQrjs
     - GF_AUTH_GENERIC_OAUTH_SCOPES="openid profile email"
     - GF_AUTH_GENERIC_OAUTH_AUTH_URL=http://10.101.102.84:8083/realms/GMS/protocol/openid-connect/auth
     - GF_AUTH_GENERIC_OAUTH_TOKEN_URL=http://keycloak:8080/realms/GMS/protocol/openid-connect/token
