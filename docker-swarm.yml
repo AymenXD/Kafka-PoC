@@ -230,9 +230,9 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ApiSettings__BaseUrl=http://webapi:5046/
       - ExternalUrls__GrafanaUrl=http://grafana:3000
-      - ExternalUrls__KibanaUrl=http://kibana:8082
+      - ExternalUrls__KibanaUrl=http://kibana:5601
       - ExternalUrls__PortainerUrl=vds-http://portainer:9000
-      - Keycloak__Authority=http://keycloak:8083/realms/GMS
+      - Keycloak__Authority=http://keycloak:8080/realms/GMS
       - Keycloak__ClientId=dashboard
       - Keycloak__ClientSecret=PwMaRz1sccnHZIq4CD4yOqWuhLIl5wlA
     deploy:
