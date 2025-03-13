@@ -232,7 +232,7 @@ services:
       - ExternalUrls__GrafanaUrl=http://10.101.102.84:3000
       - ExternalUrls__KibanaUrl=http://10.101.102.84:8082
       - ExternalUrls__PortainerUrl=vds-http://10.101.102.84:9000
-      - Keycloak__Authority=http://10.101.102.84:8083/realms/GMS
+      - Keycloak__Authority=http://keycloak:8080/realms/GMS
       - Keycloak__ClientId=dashboard
       - Keycloak__ClientSecret=PwMaRz1sccnHZIq4CD4yOqWuhLIl5wlA
     deploy:
