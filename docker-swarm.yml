@@ -239,7 +239,7 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-      replicas: 1
+      replicas: 3
       placement:
         constraints: [node.platform.os == linux]
     networks:
