@@ -222,7 +222,7 @@ services:
       - poc_net
 
   dashboard:
-    image: dip.ad.atsonline.de:5000/cloud_evaluation/dashboard:v2
+    image: dip.ad.atsonline.de:5000/cloud_evaluation/dashboard:v1
     hostname: webapi
     ports:
       - "5185:5185"
@@ -232,17 +232,19 @@ services:
       - ExternalUrls__GrafanaUrl=http://10.101.102.84:3000
       - ExternalUrls__KibanaUrl=http://10.101.102.84:8082
       - ExternalUrls__PortainerUrl=vds-http://10.101.102.84:9000
-      - Keycloak__AddressForServer=http://10.101.102.84:8083/realms/GMS
-      - Keycloak__AddressForUsers=http://10.101.102.84:8083/realms/GMS
-      - Keycloak__ClientId=dashboard
-      - Keycloak__ClientSecret=4eDriIl05QKBwW0lao6PzoGSx4PRpOoS
+      # - Keycloak__AddressForServer=http://10.101.102.84:8083/realms/GMS
+      # - Keycloak__AddressForUsers=http://10.101.102.84:8083/realms/GMS
+      # - Keycloak__ClientId=dashboard
+      # - Keycloak__ClientSecret=4eDriIl05QKBwW0lao6PzoGSx4PRpOoS
     deploy:
       restart_policy:
         condition: on-failure
       replicas: 1
       placement:
         constraints: [node.platform.os == linux]
-
+    networks:
+      - poc_net
+      
   webapi:
     image: dip.ad.atsonline.de:5000/cloud_evaluation/webapi:latest
     hostname: webapi
