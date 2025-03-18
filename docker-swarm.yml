@@ -222,7 +222,7 @@ services:
       - poc_net
 
   dashboard:
-    image: dip.ad.atsonline.de:5000/cloud_evaluation/dashboard:test
+    image: dip.ad.atsonline.de:5000/cloud_evaluation/dashboard:test2
     hostname: webapi
     ports:
       - "5185:5185"
