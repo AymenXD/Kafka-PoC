@@ -23,5 +23,5 @@ volumes:
     driver: local
     driver_opts:
       type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
+      o: "username=GMS-User,password=ATS1g2m3s!,dir_mode=0777"
       device: "//10.101.102.100/GMS/poc/grafana/"
