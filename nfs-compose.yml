@@ -3,22 +3,25 @@ version: "3.8"
 
 services:
 
-  logstash:
-    image: docker.elastic.co/logstash/logstash:8.15.1
-    hostname: logstash
-    volumes:
-      - logstash_conf:/usr/share/logstash/pipeline/
+  grafana:
+    image: grafana/grafana:11.5.2
+    hostname: grafana
     ports:
-      - "5044:5044"
-    networks:
-      - poc_net
-
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    deploy:
+      restart_policy:
+        condition: on-failure
+      replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
 
 
 volumes:
-  logstash_conf:
+  grafana_data:
     driver: local
     driver_opts:
       type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/"
+      o: "username=GMS-User,password=ATS1g2m3s!,file_mode=0777,dir_mode=0777"
+      device: "//10.101.102.100/GMS/poc/grafana/"

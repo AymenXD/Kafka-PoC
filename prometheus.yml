@@ -20,6 +20,9 @@ scrape_configs:
   #     - targets: ['consumer-vds:5141']
 
 # Not used in Grafana
-  # - job_name: 'mongodb-exporter'
+  - job_name: 'mongodb-exporter-percona'
+    static_configs:
+      - targets: ['mongodb-exporter-percona:9216']
+  # - job_name: 'mongodb-exporter-percona'
   #   static_configs:
-  #     - targets: ['mongodb-exporter:9216']
+  #     - targets: ['mongodb-exporter-percona:9217']

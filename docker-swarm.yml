@@ -425,6 +425,19 @@ services:
     networks:
       - poc_net
 
+  mongodb-exporter:
+    image: percona/mongodb_exporter:0.43.1
+    command: --mongodb.uri="mongodb://mongo0:27017/admin" --collect-all --discovering-mode
+    ports:
+      - "9216:9216"
+    deploy:
+      restart_policy:
+        condition: on-failure
+      placement:
+          constraints: [node.platform.os == linux]
+    networks:
+      - poc_net
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.15.1
     hostname: elasticsearch

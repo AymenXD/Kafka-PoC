@@ -74,18 +74,18 @@ services:
     volumes:
       - kafka_data_0:/var/lib/kafka/data
       - ./Certificates:/etc/kafka/secrets
-    logging:
-      driver: gelf
-      options:
-        gelf-address: ${GELF_ADDRESS}
-        tag: "kafka-broker-0"
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: ${GELF_ADDRESS}
+    #     tag: "kafka-broker-0"
     # deploy:
     #   resources:
     #     limits:
     #       cpus: "1.0"
     #       memory: "1G"
     depends_on:
-      - logstash
+      # - logstash
       - kafka-controller-0
       - kafka-controller-1
       - kafka-controller-2
@@ -102,18 +102,18 @@ services:
     volumes:
       - kafka_data_1:/var/lib/kafka/data
       - ./Certificates:/etc/kafka/secrets
-    logging:
-      driver: gelf
-      options:
-        gelf-address: ${GELF_ADDRESS}
-        tag: "kafka-broker-1"
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: ${GELF_ADDRESS}
+    #     tag: "kafka-broker-1"
     # deploy:
     #   resources:
     #     limits:
     #       cpus: "1.0"
     #       memory: "1G"
     depends_on:
-      - logstash
+      # - logstash
       - kafka-controller-0
       - kafka-controller-1
       - kafka-controller-2
@@ -130,18 +130,18 @@ services:
     volumes:
       - kafka_data_2:/var/lib/kafka/data
       - ./Certificates:/etc/kafka/secrets
-    logging:
-      driver: gelf
-      options:
-        gelf-address: ${GELF_ADDRESS}
-        tag: "kafka-broker-2"
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: ${GELF_ADDRESS}
+    #     tag: "kafka-broker-2"
     # deploy:
     #   resources:
     #     limits:
     #       cpus: "1.0"
     #       memory: "1G"
     depends_on:
-      - logstash
+      # - logstash
       - kafka-controller-0
       - kafka-controller-1
       - kafka-controller-2
@@ -153,7 +153,7 @@ services:
     command: ["--kafka.server=kafka-broker-0:9092", "--kafka.server=kafka-broker-1:9092", "--kafka.server=kafka-broker-2:9092"]
     restart: on-failure
     depends_on:
-      - logstash
+      # - logstash
       - kafka-broker-0
       - kafka-broker-1
       - kafka-broker-2
@@ -187,11 +187,11 @@ services:
       - Certificate__CAPath=${CERTIFICATE_CA_PATH}
       - Certificate__Path=${CERTIFICATE_PATH}
       - Certificate__Password=${CERTIFICATE_PASSWORD}
-    logging:
-      driver: gelf
-      options:
-        gelf-address: ${GELF_ADDRESS}
-        tag: "producer-ats"
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: ${GELF_ADDRESS}
+    #     tag: "producer-ats"
     volumes:
       - ./Producers/Certificates:/app/Certificates
     # deploy:
@@ -200,8 +200,8 @@ services:
     #       cpus: "1.0"
     #       memory: "512M"
     depends_on:
-      logstash:
-        condition: service_started
+      # logstash:
+      #   condition: service_started
       kafka-broker-0:
         condition: service_started
       kafka-broker-1:
@@ -230,11 +230,11 @@ services:
       - Certificate__CAPath=${CERTIFICATE_CA_PATH}
       - Certificate__Path=${CERTIFICATE_PATH}
       - Certificate__Password=${CERTIFICATE_PASSWORD}
-    logging:
-      driver: gelf
-      options:
-        gelf-address: ${GELF_ADDRESS}
-        tag: "consumer-ats"
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: ${GELF_ADDRESS}
+    #     tag: "consumer-ats"
     volumes:
       - ./Consumers/Certificates:/app/Certificates
     # deploy:
@@ -243,8 +243,8 @@ services:
     #       cpus: "1.0"
     #       memory: "512M"
     depends_on:
-      logstash:
-        condition: service_started
+      # logstash:
+      #   condition: service_started
       kafka-broker-0:
         condition: service_started
       kafka-broker-1:
@@ -328,17 +328,17 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
 
-  akhq:
-    image: tchiotludo/akhq
-    ports:
-      - "8080:8080"
-    environment:
-      AKHQ_CONFIGURATION: |
-        akhq:
-          connections:
-            kafka:
-              properties:
-                bootstrap.servers: "kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092"
+  # akhq:
+  #   image: tchiotludo/akhq
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     AKHQ_CONFIGURATION: |
+  #       akhq:
+  #         connections:
+  #           kafka:
+  #             properties:
+  #               bootstrap.servers: "kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092"
 
   mongo0:
     image: mongo:8.0.4
@@ -355,18 +355,18 @@ services:
       - 27017:27017
     volumes:
       - mongo0_data:/data/db
-    logging:
-      driver: gelf
-      options:
-        gelf-address: ${GELF_ADDRESS}
-        tag: "mongo0"
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: ${GELF_ADDRESS}
+    #     tag: "mongo0"
     # deploy:
     #   resources:
     #     limits:
     #       cpus: "0.5"
     #       memory: "512M"
-    depends_on:
-      - logstash
+    # depends_on:
+    #   - logstash
 
   mongo1:
     image: mongo:8.0.4
@@ -376,18 +376,18 @@ services:
       - 27018:27018
     volumes:
       - mongo1_data:/data/db
-    logging:
-      driver: gelf
-      options:
-        gelf-address: ${GELF_ADDRESS}
-        tag: "mongo1"
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: ${GELF_ADDRESS}
+    #     tag: "mongo1"
     # deploy:
     #   resources:
     #     limits:
     #       cpus: "0.5"
     #       memory: "512M"
-    depends_on:
-      - logstash
+    # depends_on:
+    #   - logstash
 
   mongo2:
     image: mongo:8.0.4
@@ -397,18 +397,18 @@ services:
       - 27019:27019
     volumes:
       - mongo2_data:/data/db
-    logging:
-      driver: gelf
-      options:
-        gelf-address: ${GELF_ADDRESS}
-        tag: "mongo2"
+    # logging:
+    #   driver: gelf
+    #   options:
+    #     gelf-address: ${GELF_ADDRESS}
+    #     tag: "mongo2"
     # deploy:
     #   resources:
     #     limits:
     #       cpus: "0.5"
     #       memory: "512M"
-    depends_on:
-      - logstash
+    # depends_on:
+    #   - logstash
 
   mongo-express:
     image: mongo-express:latest
@@ -421,10 +421,16 @@ services:
       - mongo1
       - mongo2
       
-  # mongodb-exporter:
+  # mongodb-exporter-bitnami:
   #   image: bitnami/mongodb-exporter:latest
+  #   command: --collect-all --discovering-mode --no-mongodb.direct-connect --mongodb.uri="mongodb://mongo0:27017/admin?ssl=false" --web.listen-address=":9216" --web.telemetry-path="/metrics" --mongodb.indexstats-colls=KafaData.KafkaEntry --mongodb.collstats-colls=KafaData.KafkaEntry
+  #   # command: [" /opt/bitnami/mongodb-exporter/bin/mongodb_exporter --discovering-mode --mongodb.indexstats-colls=KafaData.KafkaEntry --mongodb.collstats-colls=KafaData.KafkaEntry --web.listen-address=\":9216\" --web.telemetry-path=\"/metrics\" --no-mongodb.direct-connect --mongodb.uri=\"mongodb://mongo0:27017/admin?ssl=false\""]
+  #   # args: ["-c", '/opt/bitnami/mongodb-exporter/bin/mongodb_exporter --discovering-mode --web.listen-address=":9216" --web.telemetry-path="/metrics" --mongodb.direct-connect=false --mongodb.uri="mongodb://mongo0:27017/admin?ssl=false"']
+    
   #   environment:
-  #     MONGODB_URI: mongodb://mongo0:27017,mongo1:27018,mongo2:27019
+  #     MONGODB_URI: mongodb://mongo0:27017/admin?ssl=false
+  #     # MONGODB_INDEXSTATS-COLLS: KafaData.KafkaEntry
+  #     # MONGODB_COLLSTATS-COLLS: KafaData.KafkaEntry
   #   ports:
   #     - 9216:9216
   #   depends_on:
@@ -432,55 +438,65 @@ services:
   #     - mongo1
   #     - mongo2
 
-  elasticsearch:
-      image: docker.elastic.co/elasticsearch/elasticsearch:8.15.1
-      container_name: elasticsearch
-      restart: always
-      environment:
-        - discovery.type=single-node
-        - xpack.security.enabled=false
-        - bootstrap.memory_lock=true
-        - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      # deploy:
-      #   resources:
-      #     limits:
-      #       cpus: "1.0"
-      #       memory: "1G"
-      volumes:
-        - elastic_data:/usr/share/elasticsearch/data
-      ports:
-        - "9200:9200"
-      logging:
-        driver: gelf
-        options:
-          gelf-address: ${GELF_ADDRESS}
-          tag: "elasticsearch"
-      depends_on:
-        - logstash
-
-  logstash:
-    image: docker.elastic.co/logstash/logstash:8.15.1
-    container_name: logstash
-    restart: always
-    volumes:
-      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+  mongodb-exporter-percona:
+    image: percona/mongodb_exporter:0.43.1
+    command: --mongodb.uri="mongodb://mongo0:27017/admin" --collect-all --discovering-mode
     ports:
-      - "5044:5044"
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.15.1
-    container_name: kibana
-    restart: on-failure
-    environment:
-      - ELASTICSEARCH_URL=${ELASTICSEARCH_URL}
-      - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
-      - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
-    ports:
-      - "8082:5601"
+      - "9216:9216"
     depends_on:
-      - elasticsearch
-    volumes:
-      - kibana_data:/usr/share/kibana/data
+      - mongo0
+      - mongo1
+      - mongo2
+
+  # elasticsearch:
+  #     image: docker.elastic.co/elasticsearch/elasticsearch:8.15.1
+  #     container_name: elasticsearch
+  #     restart: always
+  #     environment:
+  #       - discovery.type=single-node
+  #       - xpack.security.enabled=false
+  #       - bootstrap.memory_lock=true
+  #       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+  #     # deploy:
+  #     #   resources:
+  #     #     limits:
+  #     #       cpus: "1.0"
+  #     #       memory: "1G"
+  #     volumes:
+  #       - elastic_data:/usr/share/elasticsearch/data
+  #     ports:
+  #       - "9200:9200"
+  #     logging:
+  #       driver: gelf
+  #       options:
+  #         gelf-address: ${GELF_ADDRESS}
+  #         tag: "elasticsearch"
+  #     depends_on:
+  #       - logstash
+
+  # logstash:
+  #   image: docker.elastic.co/logstash/logstash:8.15.1
+  #   container_name: logstash
+  #   restart: always
+  #   volumes:
+  #     - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+  #   ports:
+  #     - "5044:5044"
+
+  # kibana:
+  #   image: docker.elastic.co/kibana/kibana:8.15.1
+  #   container_name: kibana
+  #   restart: on-failure
+  #   environment:
+  #     - ELASTICSEARCH_URL=${ELASTICSEARCH_URL}
+  #     - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
+  #     - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
+  #   ports:
+  #     - "8082:5601"
+  #   depends_on:
+  #     - elasticsearch
+  #   volumes:
+  #     - kibana_data:/usr/share/kibana/data
 
 volumes:
   kafka_controller_data_0:
@@ -503,7 +519,7 @@ volumes:
     driver: local
   grafana_data:
     driver: local
-  elastic_data:
-    driver: local
-  kibana_data:
-    driver: local
+  # elastic_data:
+  #   driver: local
+  # kibana_data:
+  #   driver: local
