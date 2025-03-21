@@ -21,10 +21,6 @@ services:
 volumes:
   grafana-data:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!,file_mode=0777,dir_mode=0777"
-      device: "//10.101.102.100/GMS/poc/grafana/data"
   grafana-storage:
     driver: local
     driver_opts:
