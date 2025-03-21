@@ -286,6 +286,7 @@ services:
     ports:
       - "3000:3000"
     environment:
+    - GF_PATHS_STORAGE=/grafana-provisioning
     - GF_AUTH_GENERIC_OAUTH_NAME=OAuth
     - GF_AUTH_BASIC_ENABLED=true
     - GF_AUTH_GENERIC_OAUTH_ENABLED=true
@@ -311,7 +312,9 @@ services:
     - GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH=contains(role[*], 'admin') && 'GrafanaAdmin' || contains(role[*], 'user') && 'Viewer' 
     - GF_AUTH_DISABLE_LOGIN_FORM=true
     volumes:
-      - grafana_data:/var/lib/grafana
+      - grafana-data:/var/lib/grafana
+      - grafana-storage:/etc/grafana
+      - grafana-provisioning:/grafana-provisioning
     deploy:
       restart_policy:
         condition: on-failure
@@ -601,12 +604,20 @@ volumes:
     #   type: "cifs"
     #   o: "username=GMS-User,password=ATS1g2m3s!,file_mode=0777,dir_mode=0777"
     #   device: "//10.101.102.100/GMS/poc/mongo/"
-  grafana_data:
+  grafana-data:
     driver: local
-    # driver_opts:
-    #   type: "cifs"
-    #   o: "username=GMS-User,password=ATS1g2m3s!,file_mode=0777,dir_mode=0777"
-    #   device: "//10.101.102.100/GMS/poc/grafana/"
+  grafana-storage:
+    driver: local
+    driver_opts:
+      type: "cifs"
+      o: "username=GMS-User,password=ATS1g2m3s!,file_mode=0777,dir_mode=0777"
+      device: "//10.101.102.100/GMS/poc/grafana/storage"
+  grafana-provisioning:
+    driver: local
+    driver_opts:
+      type: "cifs"
+      o: "username=GMS-User,password=ATS1g2m3s!,file_mode=0777,dir_mode=0777"
+      device: "//10.101.102.100/GMS/poc/grafana/provisioning"
   elastic_data:
     driver: local
     # driver_opts:
