@@ -155,32 +155,58 @@ services:
     networks:
       - poc_net
 
-  data-generation:
-    image: dip.ad.atsonline.de:5000/cloud_evaluation/data-generation:latest
-    hostname: data-generation
-    ports:
-      - "5247:5247"
-    deploy:
-      restart_policy:
-        condition: on-failure
-      replicas: 1
-      placement:
-        constraints: [node.platform.os == linux]
-    networks:
-      - poc_net
+  # data-generation:
+  #   image: dip.ad.atsonline.de:5000/cloud_evaluation/data-generation:latest
+  #   hostname: data-generation
+  #   ports:
+  #     - "5247:5247"
+  #   deploy:
+  #     restart_policy:
+  #       condition: on-failure
+  #     replicas: 1
+  #     placement:
+  #       constraints: [node.platform.os == linux]
+  #   networks:
+  #     - poc_net
+
+  # producer-vds:
+  #   image: vds-sample-server:windows
+  #   hostname: producer-vds
+  #   ports:
+  #     - "50000:50000"
+  #     - "60000:60000"
+  #   environment:
+  #     - Port_IPv1=50000
+  #     - Port_SecurIP=60000
+  #     - Kafka__Use=true
+  #     - Kafka__Brokers=kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092
+  #     - Kafka__Topic=vds-data
+  #   logging:
+  #     driver: gelf
+  #     options:
+  #       gelf-address: "tcp://10.101.102.84:5044"
+  #       tag: "producer-vds"
+  #   deploy:
+  #     restart_policy:
+  #       condition: on-failure
+  #     replicas: 1
+  #     placement:
+  #       constraints: [node.platform.os == windows]
+  #   networks:
+  #     - poc_net
 
   producer-vds:
-    image: vds-sample-server:windows
+    image: dip.ad.atsonline.de:5000/cloud_evaluation/tcp-server:latest
     hostname: producer-vds
     ports:
       - "50000:50000"
-      - "60000:60000"
+      - "50001:50001"
     environment:
-      - Port_IPv1=50000
-      - Port_SecurIP=60000
+      - Port=50000
+      - MetricsPort=50001
       - Kafka__Use=true
       - Kafka__Brokers=kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092
-      - Kafka__Topic=vds-data
+      - Kafka__Topic=tcp-data
     logging:
       driver: gelf
       options:
@@ -203,9 +229,9 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - Kafka__Brokers=kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092
-      - Kafka__Consumer_Group=vds-group
-      - Kafka__Create_Topics__0=vds-data
-      - Kafka__Subscribe_Topics__0=vds-data
+      - Kafka__Consumer_Group=tcp-group
+      - Kafka__Create_Topics__0=tcp-data
+      - Kafka__Subscribe_Topics__0=tcp-data
       - MongoDB__ConnectionStrings="mongodb://mongo0:27017,mongo1:27018,mongo2:27019/?replicaSet=rs0"
     logging:
       driver: gelf
@@ -221,32 +247,32 @@ services:
     networks:
       - poc_net
 
-  dashboard:
-    image: dip.ad.atsonline.de:5000/cloud_evaluation/dashboard:v1
-    hostname: webapi
-    ports:
-      - "5185:5185"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ApiSettings__BaseUrl=http://10.101.102.84:5046/
-      - ExternalUrls__GrafanaUrl=http://10.101.102.84:3000
-      - ExternalUrls__KibanaUrl=http://10.101.102.84:8082
-      - ExternalUrls__PortainerUrl=http://10.101.102.84:9000
-      # - Keycloak__AddressForServer=http://10.101.102.84:8083/realms/GMS
-      # - Keycloak__AddressForUsers=http://10.101.102.84:8083/realms/GMS
-      # - Keycloak__ClientId=dashboard
-      # - Keycloak__ClientSecret=4eDriIl05QKBwW0lao6PzoGSx4PRpOoS
-    deploy:
-      restart_policy:
-        condition: on-failure
-      replicas: 1
-      placement:
-        constraints: [node.platform.os == linux]
-    networks:
-      - poc_net
+  # dashboard:
+  #   image: dip.ad.atsonline.de:5000/cloud_evaluation/dashboard:v1
+  #   hostname: webapi
+  #   ports:
+  #     - "5185:5185"
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #     - ApiSettings__BaseUrl=http://10.101.102.84:5046/
+  #     - ExternalUrls__GrafanaUrl=http://10.101.102.84:3000
+  #     - ExternalUrls__KibanaUrl=http://10.101.102.84:8082
+  #     - ExternalUrls__PortainerUrl=http://10.101.102.84:9000
+  #     # - Keycloak__AddressForServer=http://10.101.102.84:8083/realms/GMS
+  #     # - Keycloak__AddressForUsers=http://10.101.102.84:8083/realms/GMS
+  #     # - Keycloak__ClientId=dashboard
+  #     # - Keycloak__ClientSecret=4eDriIl05QKBwW0lao6PzoGSx4PRpOoS
+  #   deploy:
+  #     restart_policy:
+  #       condition: on-failure
+  #     replicas: 1
+  #     placement:
+  #       constraints: [node.platform.os == linux]
+  #   networks:
+  #     - poc_net
 
   webapi:
-    image: dip.ad.atsonline.de:5000/cloud_evaluation/webapi:latest
+    image: dip.ad.atsonline.de:5000/cloud_evaluation/webapi:tcp
     hostname: webapi
     ports:
       - "5046:5046"
@@ -254,7 +280,7 @@ services:
       - MongoDbSettings__ConnectionString=mongodb://mongo0:27017,mongo1:27018,mongo2:27019/?replicaSet=rs0
       - MongoDbSettings__DatabaseName=KafkaData
       - MongoDbSettings__CollectionName=KafkaEntries
-      - MongoDbSettings__CompanyId=vds-data
+      - MongoDbSettings__CompanyId=tcp-data
     deploy:
       restart_policy:
         condition: on-failure
