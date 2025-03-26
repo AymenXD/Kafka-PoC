@@ -278,7 +278,7 @@ services:
       - MongoDbSettings__ConnectionString=mongodb://mongo0:27017,mongo1:27018,mongo2:27019/?replicaSet=rs0
       - MongoDbSettings__DatabaseName=KafkaData
       - MongoDbSettings__CollectionName=KafkaEntries
-      - MongoDbSettings__CompanyId=tcp-data
+      - MongoDbSettings__Topic=tcp-data
     deploy:
       restart_policy:
         condition: on-failure
