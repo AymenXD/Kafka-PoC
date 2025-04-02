@@ -206,7 +206,7 @@ services:
       - MetricsPort=50001
       - Kafka__Use=true
       - Kafka__Brokers=kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092
-      - Kafka__Topic=tcp-data
+      - Kafka__Topic=tcp-test
     logging:
       driver: gelf
       options:
@@ -230,8 +230,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - Kafka__Brokers=kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092
       - Kafka__Consumer_Group=tcp-group
-      - Kafka__Create_Topics__0=tcp-data
-      - Kafka__Subscribe_Topics__0=tcp-data
+      - Kafka__Create_Topics__0=tcp-test
+      - Kafka__Subscribe_Topics__0=tcp-test
       - MongoDB__ConnectionStrings="mongodb://mongo0:27017,mongo1:27018,mongo2:27019/?replicaSet=rs0"
     logging:
       driver: gelf
