@@ -216,6 +216,8 @@ services:
       restart_policy:
         condition: on-failure
       replicas: 1
+      placement:
+        constraints: [node.platform.os == linux]
     networks:
       - poc_net
 
