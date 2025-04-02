@@ -222,7 +222,7 @@ services:
       - poc_net
 
   consumer-vds:
-    image: dip.ad.atsonline.de:5000/cloud_evaluation/consumer:tcp-1
+    image: dip.ad.atsonline.de:5000/cloud_evaluation/consumer:tcp-v1.1
     hostname: consumer-vds
     ports:
       - "5121:5121"
