@@ -196,7 +196,7 @@ services:
   #     - poc_net
 
   producer-vds:
-    image: dip.ad.atsonline.de:5000/cloud_evaluation/tcp-server:test4
+    image: dip.ad.atsonline.de:5000/cloud_evaluation/tcp-server:v1.1
     hostname: producer-vds
     ports:
       - "50000:50000"
@@ -239,14 +239,14 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-      replicas: 1
+      replicas: 3
       placement:
         constraints: [node.platform.os == linux]
     networks:
       - poc_net
 
   dashboard:
-    image: dip.ad.atsonline.de:5000/cloud_evaluation/dashboard:v1.2
+    image: dip.ad.atsonline.de:5000/cloud_evaluation/dashboard:v1.3
     hostname: webapi
     ports:
       - "5185:5185"
