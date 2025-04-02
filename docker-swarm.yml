@@ -196,7 +196,7 @@ services:
   #     - poc_net
 
   producer-vds:
-    image: dip.ad.atsonline.de:5000/cloud_evaluation/tcp-server:test3
+    image: dip.ad.atsonline.de:5000/cloud_evaluation/tcp-server:test4
     hostname: producer-vds
     ports:
       - "50000:50000"
