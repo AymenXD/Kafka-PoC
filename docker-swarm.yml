@@ -196,7 +196,7 @@ services:
   #     - poc_net
 
   producer-vds:
-    image: dip.ad.atsonline.de:5000/cloud_evaluation/tcp-server:v1.2
+    image: dip.ad.atsonline.de:5000/cloud_evaluation/tcp-server
     hostname: producer-vds
     ports:
       - "50000:50000"
@@ -206,7 +206,7 @@ services:
       - MetricsPort=50001
       - Kafka__Use=true
       - Kafka__Brokers=kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092
-      - Kafka__Topic=tcp-test
+      - Kafka__Topic=tcp-data
     logging:
       driver: gelf
       options:
@@ -222,7 +222,7 @@ services:
       - poc_net
 
   consumer-vds:
-    image: dip.ad.atsonline.de:5000/cloud_evaluation/consumer:tcp-v1.1
+    image: dip.ad.atsonline.de:5000/cloud_evaluation/consumer:tcp
     hostname: consumer-vds
     ports:
       - "5121:5121"
@@ -230,8 +230,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - Kafka__Brokers=kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092
       - Kafka__Consumer_Group=tcp-group
-      - Kafka__Create_Topics__0=tcp-test
-      - Kafka__Subscribe_Topics__0=tcp-test
+      - Kafka__Create_Topics__0=tcp-data
+      - Kafka__Subscribe_Topics__0=tcp-data
       - MongoDB__ConnectionStrings="mongodb://mongo0:27017,mongo1:27018,mongo2:27019/?replicaSet=rs0"
     logging:
       driver: gelf
