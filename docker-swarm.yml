@@ -400,13 +400,17 @@ services:
       - postgres-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    networks:
+      - poc_net
 
   adminer:
     image: adminer
     restart: always
     ports:
       - 8084:8080
-  
+    networks:
+      - poc_net
+      
   mongo0:
     image: mongo:8.0.4
     hostname: mongo0
