@@ -280,7 +280,7 @@ services:
     #   - logstash
 
   consumer-vds:
-    image: dip.ad.atsonline.de:5000/cloud_evaluation/consumer:tcp
+    image: dip.ad.atsonline.de:5000/cloud_evaluation/consumer:tcp-v2
     container_name: consumer-vds
     ports:
       - "5121:5121"
@@ -290,9 +290,10 @@ services:
       - Kafka__Brokers=kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092
       - Kafka__Consumer_Group=tcp-group
       - Kafka__Create_Topics__0=tcp-data
+      - Kafka__Create_Topics__1=tcp-data-ack
       - Kafka__Subscribe_Topics__0=tcp-data
       - MongoDB__ConnectionStrings="mongodb://mongo0:27017,mongo1:27018,mongo2:27019/?replicaSet=rs0"
-    # logging:
+     # logging:
     #   driver: gelf
     #   options:
     #     gelf-address: ${GELF_ADDRESS}
@@ -317,7 +318,16 @@ services:
       - Kafka__Consumer_Group=tcp-group
       - Kafka__Create_Topics__0=tcp-data-ack
       - Kafka__Subscribe_Topics__0=tcp-data-ack
-      - ConnectionStrings_PostgresConnection="Host=localhost;Port=5432;Database=KafkaData;Username=postgres;Password=postgres"
+      # - ConnectionStrings__PostgresConnection="Host=localhost;Port=5432;Database=KafkaData;Username=postgres;Password=postgres"
+
+  webapi:
+    image: dip.ad.atsonline.de:5000/cloud_evaluation/webapi:tcp-v2
+    hostname: webapi
+    ports:
+      - "5046:5046"
+    environment:
+      - ConnectionStrings__PostgresConnection=Host=host.docker.internal;Port=5432;Database=KafkaData;Username=postgres;Password=postgres
+      - ConnectionStrings__Topic=tcp-data-ack
 
   postgres:
     image: postgres:13
