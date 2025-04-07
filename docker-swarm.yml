@@ -477,20 +477,20 @@ services:
     networks:
       - poc_net
 
-  mongo-express:
-    image: mongo-express:latest
-    hostname: mongo-express
-    ports:
-      - "8081:8081"
-    environment:
-      - ME_CONFIG_MONGODB_URL=mongodb://mongo0:27017,mongo1:27018,mongo2:27019/?replicaSet=rs0
-    deploy:
-      restart_policy:
-        condition: on-failure
-      placement:
-          constraints: [node.platform.os == linux]
-    networks:
-      - poc_net
+  # mongo-express:
+  #   image: mongo-express:latest
+  #   hostname: mongo-express
+  #   ports:
+  #     - "8081:8081"
+  #   environment:
+  #     - ME_CONFIG_MONGODB_URL=mongodb://mongo0:27017,mongo1:27018,mongo2:27019/?replicaSet=rs0
+  #   deploy:
+  #     restart_policy:
+  #       condition: on-failure
+  #     placement:
+  #         constraints: [node.platform.os == linux]
+  #   networks:
+  #     - poc_net
 
   mongodb-exporter:
     image: percona/mongodb_exporter:0.43.1
