@@ -250,7 +250,7 @@ services:
 
   consumer-vds-ack:
     image: dip.ad.atsonline.de:5000/cloud_evaluation/consumer:ack
-    hostname: consumer-vds
+    hostname: consumer-vds-ack
     ports:
       - "5131:5131"
     environment:
@@ -391,6 +391,7 @@ services:
 
   postgres:
     image: postgres:13
+    hostname: postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
