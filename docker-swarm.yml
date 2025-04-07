@@ -259,7 +259,7 @@ services:
       - Kafka__Consumer_Group=tcp-group
       - Kafka__Create_Topics__0=tcp-data-ack
       - Kafka__Subscribe_Topics__0=tcp-data-ack
-      - ConnectionStrings_PostgresConnection="Server=postgres;Port=5432;Database=KafkaData;Username=postgres;Password=postgres"
+      - ConnectionStrings_PostgresConnection=Host=postgres;Port=5432;Database=KafkaData;Username=postgres;Password=postgres
     deploy:
       restart_policy:
         condition: on-failure
@@ -299,7 +299,7 @@ services:
     ports:
       - "5046:5046"
     environment:
-      - ConnectionStrings__PostgresConnection="Host=postgres;Port=5432;Database=KafkaData;Username=postgres;Password=postgres"
+      - ConnectionStrings__PostgresConnection=Host=postgres;Port=5432;Database=KafkaData;Username=postgres;Password=postgres
       - ConnectionStrings__Topic=tcp-data-ack
     deploy:
       restart_policy:
