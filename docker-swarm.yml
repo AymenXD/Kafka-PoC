@@ -243,7 +243,6 @@ services:
       restart_policy:
         condition: on-failure
       replicas: 1
-      endpoint_mode: dnsrr
       placement:
         constraints: [node.platform.os == linux]
     networks:
