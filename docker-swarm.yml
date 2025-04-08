@@ -230,9 +230,9 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - Kafka__Brokers=kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092
       - Kafka__Consumer_Group=tcp-group
-      - Kafka__Create_Topics__0=tcp-data
-      - Kafka__Create_Topics__1=tcp-data-ack
-      - Kafka__Subscribe_Topics__0=tcp-data
+      - Kafka__Create_Topics__0=test-data
+      - Kafka__Create_Topics__1=test-data-ack
+      - Kafka__Subscribe_Topics__0=test-data
       - MongoDB__ConnectionStrings="mongodb://mongo0:27017,mongo1:27018,mongo2:27019/?replicaSet=rs0"
     logging:
       driver: gelf
@@ -257,8 +257,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - Kafka__Brokers=kafka-broker-0:9092,kafka-broker-1:9092,kafka-broker-2:9092
       - Kafka__Consumer_Group=tcp-group
-      - Kafka__Create_Topics__0=tcp-data-ack
-      - Kafka__Subscribe_Topics__0=tcp-data-ack
+      - Kafka__Create_Topics__0=test-data-ack
+      - Kafka__Subscribe_Topics__0=test-data-ack
       - ConnectionStrings__PostgresConnection=Host=postgres;Port=5432;Database=KafkaData;Username=postgres;Password=postgres
     deploy:
       restart_policy:
