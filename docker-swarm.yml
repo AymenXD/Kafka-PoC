@@ -222,7 +222,7 @@ services:
       - poc_net
 
   consumer-vds:
-    image: dip.ad.atsonline.de:5000/cloud_evaluation/consumer:tcp-v2
+    image: dip.ad.atsonline.de:5000/cloud_evaluation/consumer:tcp-v2.1
     hostname: consumer-vds
     ports:
       - "5121:5121"
@@ -243,6 +243,7 @@ services:
       restart_policy:
         condition: on-failure
       replicas: 1
+      endpoint_mode: dnsrr
       placement:
         constraints: [node.platform.os == linux]
     networks:
