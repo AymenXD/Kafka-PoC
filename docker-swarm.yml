@@ -222,7 +222,7 @@ services:
       - poc_net
 
   consumer-vds:
-    image: dip.ad.atsonline.de:5000/cloud_evaluation/consumer:tcp-v2.1
+    image: dip.ad.atsonline.de:5000/cloud_evaluation/consumer:tcp-postgres
     hostname: consumer-vds
     ports:
       - "5121:5121"
@@ -233,7 +233,7 @@ services:
       - Kafka__Create_Topics__0=tcp-data
       - Kafka__Create_Topics__1=tcp-data-ack
       - Kafka__Subscribe_Topics__0=tcp-data
-      - MongoDB__ConnectionStrings="mongodb://mongo0:27017,mongo1:27018,mongo2:27019/?replicaSet=rs0"
+      - ConnectionStrings__PostgresConnection=Host=postgres-master,postgres-replica;Port=5432;Database=KafkaData;Username=postgres;Password=postgres;TargetSessionAttributes=read-write
     logging:
       driver: gelf
       options:
@@ -249,7 +249,7 @@ services:
       - poc_net
 
   consumer-vds-ack:
-    image: dip.ad.atsonline.de:5000/cloud_evaluation/consumer:ack
+    image: dip.ad.atsonline.de:5000/cloud_evaluation/consumer:tcp-ack
     hostname: consumer-vds-ack
     ports:
       - "5131:5131"
@@ -259,7 +259,7 @@ services:
       - Kafka__Consumer_Group=tcp-group
       - Kafka__Create_Topics__0=tcp-data-ack
       - Kafka__Subscribe_Topics__0=tcp-data-ack
-      - ConnectionStrings__PostgresConnection=Host=postgres;Port=5432;Database=KafkaData;Username=postgres;Password=postgres
+      - ConnectionStrings__PostgresConnection=Host=postgres-ack;Port=5432;Database=KafkaData;Username=postgres;Password=postgres
     deploy:
       restart_policy:
         condition: on-failure
@@ -389,15 +389,50 @@ services:
   #   networks:
   #     - poc_net
 
-  postgres:
+  postgres-master:
+    image: bitnami/postgresql:14
+    environment:
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_PASSWORD=postgres
+      - POSTGRESQL_DATABASE=KafkaData
+      # Configure this instance as the master
+      - POSTGRESQL_REPLICATION_MODE=master
+      - POSTGRESQL_REPLICATION_USER=postgres-replica
+      - POSTGRESQL_REPLICATION_PASSWORD=postgres-replica
+    networks:
+      - poc-net
+    deploy:
+      replicas: 1
+    volumes:
+      - postgres-master-data:/bitnami/postgresql
+
+  postgres-replica:
+    image: bitnami/postgresql:14
+    environment:
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_PASSWORD=postgres
+      - POSTGRESQL_DATABASE=KafkaData
+      # Configure this instance as a replica
+      - POSTGRESQL_REPLICATION_MODE=slave
+      - POSTGRESQL_MASTER_HOST=postgres-master
+      - POSTGRESQL_REPLICATION_USER=postgres-replica
+      - POSTGRESQL_REPLICATION_PASSWORD=postgres-replica
+    networks:
+      - poc-net
+    deploy:
+      replicas: 2
+    volumes:
+      - postgres-replica-data:/bitnami/postgresql
+
+  postgres-ack:
     image: postgres:13
-    hostname: postgres
+    hostname: postgres-ack
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: KafkaData
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres-ack-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
@@ -411,75 +446,75 @@ services:
     networks:
       - poc_net
       
-  mongo0:
-    image: mongo:8.0.4
-    hostname: mongo0
-    command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
-    healthcheck:
-      test:
-        - CMD-SHELL
-        - "echo \"try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo0:27017',priority:2},{_id:1,host:'mongo1:27018',priority:1},{_id:2,host:'mongo2:27019',priority:0.5}]}) }\" | mongosh --port 27017 --quiet"
-      interval: 5s
-      timeout: 30s
-      retries: 30
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo0_data:/data/db
-    logging:
-      driver: gelf
-      options:
-        gelf-address: "tcp://10.101.102.84:5044"
-        tag: "mongo0"
-    networks:
-      - poc_net
-    deploy:
-      restart_policy:
-        condition: on-failure
-      placement:
-          constraints: [node.platform.os == linux]
+  # mongo0:
+  #   image: mongo:8.0.4
+  #   hostname: mongo0
+  #   command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
+  #   healthcheck:
+  #     test:
+  #       - CMD-SHELL
+  #       - "echo \"try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo0:27017',priority:2},{_id:1,host:'mongo1:27018',priority:1},{_id:2,host:'mongo2:27019',priority:0.5}]}) }\" | mongosh --port 27017 --quiet"
+  #     interval: 5s
+  #     timeout: 30s
+  #     retries: 30
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - mongo0_data:/data/db
+  #   logging:
+  #     driver: gelf
+  #     options:
+  #       gelf-address: "tcp://10.101.102.84:5044"
+  #       tag: "mongo0"
+  #   networks:
+  #     - poc_net
+  #   deploy:
+  #     restart_policy:
+  #       condition: on-failure
+  #     placement:
+  #         constraints: [node.platform.os == linux]
 
-  mongo1:
-    image: mongo:8.0.4
-    hostname: mongo1
-    command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27018"]
-    ports:
-      - "27018:27018"
-    volumes:
-      - mongo1_data:/data/db
-    logging:
-      driver: gelf
-      options:
-        gelf-address: "tcp://10.101.102.84:5044"
-        tag: "mongo1"
-    deploy:
-      restart_policy:
-        condition: on-failure
-      placement:
-          constraints: [node.platform.os == linux]
-    networks:
-      - poc_net
+  # mongo1:
+  #   image: mongo:8.0.4
+  #   hostname: mongo1
+  #   command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27018"]
+  #   ports:
+  #     - "27018:27018"
+  #   volumes:
+  #     - mongo1_data:/data/db
+  #   logging:
+  #     driver: gelf
+  #     options:
+  #       gelf-address: "tcp://10.101.102.84:5044"
+  #       tag: "mongo1"
+  #   deploy:
+  #     restart_policy:
+  #       condition: on-failure
+  #     placement:
+  #         constraints: [node.platform.os == linux]
+  #   networks:
+  #     - poc_net
 
-  mongo2:
-    image: mongo:8.0.4
-    hostname: mongo2
-    command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27019"]
-    ports:
-      - "27019:27019"
-    volumes:
-      - mongo2_data:/data/db
-    logging:
-      driver: gelf
-      options:
-        gelf-address: "tcp://10.101.102.84:5044"
-        tag: "mongo2"
-    deploy:
-      restart_policy:
-        condition: on-failure
-      placement:
-          constraints: [node.platform.os == linux]
-    networks:
-      - poc_net
+  # mongo2:
+  #   image: mongo:8.0.4
+  #   hostname: mongo2
+  #   command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27019"]
+  #   ports:
+  #     - "27019:27019"
+  #   volumes:
+  #     - mongo2_data:/data/db
+  #   logging:
+  #     driver: gelf
+  #     options:
+  #       gelf-address: "tcp://10.101.102.84:5044"
+  #       tag: "mongo2"
+  #   deploy:
+  #     restart_policy:
+  #       condition: on-failure
+  #     placement:
+  #         constraints: [node.platform.os == linux]
+  #   networks:
+  #     - poc_net
 
   # mongo-express:
   #   image: mongo-express:latest
@@ -496,18 +531,18 @@ services:
   #   networks:
   #     - poc_net
 
-  mongodb-exporter:
-    image: percona/mongodb_exporter:0.43.1
-    command: --mongodb.uri="mongodb://mongo0:27017/admin" --collect-all --discovering-mode
-    ports:
-      - "9216:9216"
-    deploy:
-      restart_policy:
-        condition: on-failure
-      placement:
-          constraints: [node.platform.os == linux]
-    networks:
-      - poc_net
+  # mongodb-exporter:
+  #   image: percona/mongodb_exporter:0.43.1
+  #   command: --mongodb.uri="mongodb://mongo0:27017/admin" --collect-all --discovering-mode
+  #   ports:
+  #     - "9216:9216"
+  #   deploy:
+  #     restart_policy:
+  #       condition: on-failure
+  #     placement:
+  #         constraints: [node.platform.os == linux]
+  #   networks:
+  #     - poc_net
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.15.1
@@ -712,14 +747,19 @@ volumes:
       type: "cifs"
       o: "username=GMS-User,password=ATS1g2m3s!"
       device: "//10.101.102.100/GMS/poc/prometheus/"
-  postgres-data:
-    driver: local
   logstash_conf:
     driver: local
     driver_opts:
       type: "cifs"
       o: "username=GMS-User,password=ATS1g2m3s!"
       device: "//10.101.102.100/GMS/poc/logstash/"
+  postgres-master-data:
+    driver: local
+  postgres-replica-data:
+    driver: local
+  postgres-ack-data:
+    driver: local
+
 
 networks:
   poc_net:
