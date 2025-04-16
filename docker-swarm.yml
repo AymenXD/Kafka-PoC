@@ -400,7 +400,7 @@ services:
       - POSTGRESQL_REPLICATION_USER=postgres-replica
       - POSTGRESQL_REPLICATION_PASSWORD=postgres-replica
     networks:
-      - poc-net
+      - poc_net
     deploy:
       replicas: 1
     volumes:
@@ -418,7 +418,7 @@ services:
       - POSTGRESQL_REPLICATION_USER=postgres-replica
       - POSTGRESQL_REPLICATION_PASSWORD=postgres-replica
     networks:
-      - poc-net
+      - poc_net
     deploy:
       replicas: 2
     volumes:
