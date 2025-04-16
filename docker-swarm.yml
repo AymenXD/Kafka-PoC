@@ -299,7 +299,7 @@ services:
     ports:
       - "5046:5046"
     environment:
-      - ConnectionStrings__PostgresConnection=Host=postgres;Port=5432;Database=KafkaData;Username=postgres;Password=postgres
+      - ConnectionStrings__PostgresConnection=Host=postgres-ack;Port=5432;Database=KafkaData;Username=postgres;Password=postgres
       - ConnectionStrings__Topic=tcp-data-ack
     deploy:
       restart_policy:
