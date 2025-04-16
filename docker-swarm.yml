@@ -259,7 +259,7 @@ services:
       - Kafka__Consumer_Group=tcp-group
       - Kafka__Create_Topics__0=tcp-data-ack
       - Kafka__Subscribe_Topics__0=tcp-data-ack
-      - ConnectionStrings__PostgresConnection=Host=postgres-ack;Port=5432;Database=KafkaData;Username=postgres;Password=postgres
+      - ConnectionStrings__PostgresConnection=Host=postgres-ack;Port=5431;Database=KafkaData;Username=postgres;Password=postgres
     deploy:
       restart_policy:
         condition: on-failure
@@ -434,7 +434,7 @@ services:
     volumes:
       - postgres-ack-data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5431:5432"
     networks:
       - poc_net
 
