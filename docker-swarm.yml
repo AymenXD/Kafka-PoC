@@ -661,6 +661,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Etc/UTC
+      - NC_ALLOW_LOCAL_REMOTE_SERVERS=true
     volumes:
       - nextcloud_config_vol:/config
       - nextcloud_data_vol:/data
