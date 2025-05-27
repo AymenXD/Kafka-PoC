@@ -781,10 +781,6 @@ volumes:
     driver: local
   nextcloud_config_vol:
     driver: local
-    driver_opts:
-      type: "cifs"
-      o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/nextcloud/"
   nextcloud_data_vol:
     driver: local
 
