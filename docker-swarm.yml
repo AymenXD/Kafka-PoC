@@ -654,6 +654,24 @@ services:
       placement:
         constraints: [node.role == manager]
 
+  nextcloud:
+    image: lscr.io/linuxserver/nextcloud:latest
+    container_name: nextcloud
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - nextcloud_config:/config
+      - nextcloud_data:/data
+    ports:
+     - 8090:80
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
 volumes:
   kafka_controller_data_0:
     driver: local
@@ -760,6 +778,10 @@ volumes:
   postgres-replica-data:
     driver: local
   postgres-ack-data:
+    driver: local
+  nextcloud_config:
+    driver: local
+  nextcloud_data:
     driver: local
 
 
