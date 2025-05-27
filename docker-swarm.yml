@@ -662,13 +662,13 @@ services:
       - PGID=1000
       - TZ=Etc/UTC
     volumes:
-      - nextcloud_config:/config
-      - nextcloud_data:/data
+      - nextcloud_config_vol:/config
+      - nextcloud_data_vol:/data
     ports:
      - 8090:80
     deploy:
       mode: replicated
-      replicas: 1
+      replicas: 2
       restart_policy:
         condition: on-failure
 
@@ -779,9 +779,9 @@ volumes:
     driver: local
   postgres-ack-data:
     driver: local
-  nextcloud_config:
+  nextcloud_config_vol:
     driver: local
-  nextcloud_data:
+  nextcloud_data_vol:
     driver: local
 
 
