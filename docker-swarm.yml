@@ -661,6 +661,8 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Etc/UTC
+    networks:
+      - poc_net
     volumes:
       - nextcloud_config_vol:/config
       - nextcloud_data_vol:/data
