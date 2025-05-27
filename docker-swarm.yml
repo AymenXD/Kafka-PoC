@@ -662,7 +662,7 @@ services:
       - PGID=1000
       - TZ=Etc/UTC
     volumes:
-      - nextcloud_config_vol:/config/config.php:ro
+      - nextcloud_config_vol:/config
       - nextcloud_data_vol:/data
     ports:
      - 8090:80
@@ -784,7 +784,7 @@ volumes:
     driver_opts:
       type: "cifs"
       o: "username=GMS-User,password=ATS1g2m3s!"
-      device: "//10.101.102.100/GMS/poc/nextcloud/config.php"
+      device: "//10.101.102.100/GMS/poc/nextcloud/"
   nextcloud_data_vol:
     driver: local
 
