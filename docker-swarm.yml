@@ -664,7 +664,7 @@ services:
     networks:
       - poc_net
     volumes:
-      - ./config.php:/config/config.php
+      - ./config.php:/config//www/nextcloud/config/config.php
       - nextcloud_data_vol:/data
     ports:
      - 8090:80
