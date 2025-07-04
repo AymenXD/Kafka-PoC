@@ -13,7 +13,7 @@ x-kafka-controller-base: &kafka-controller-base
     restart_policy:
       condition: on-failure
     placement:
-        constraints: [node.platform.os == linux]
+        constraints: [node.role == manager]
 
 # YAML Extension for Kafka Brokers (base configuration)
 x-kafka-broker-base: &kafka-broker-base
@@ -33,7 +33,7 @@ x-kafka-broker-base: &kafka-broker-base
     restart_policy:
       condition: on-failure
     placement:
-        constraints: [node.platform.os == linux]
+        constraints: [node.role == manager]
 
 services:
   # Controllers
@@ -151,7 +151,7 @@ services:
         condition: on-failure
       replicas: 1  # Replicated for load balancing
       placement:
-        constraints: [node.platform.os == linux]
+        constraints: [node.role == worker]
     networks:
       - poc_net
 
@@ -217,7 +217,7 @@ services:
         condition: on-failure
       replicas: 1
       placement:
-        constraints: [node.platform.os == linux]
+        constraints: [node.role == worker]
     networks:
       - poc_net
 
@@ -244,7 +244,7 @@ services:
         condition: on-failure
       replicas: 1
       placement:
-        constraints: [node.platform.os == linux]
+        constraints: [node.role == manager]
     networks:
       - poc_net
 
@@ -265,7 +265,7 @@ services:
         condition: on-failure
       replicas: 1
       placement:
-        constraints: [node.platform.os == linux]
+        constraints: [node.role == worker]
     networks:
       - poc_net
 
@@ -289,7 +289,7 @@ services:
         condition: on-failure
       replicas: 1
       placement:
-        constraints: [node.platform.os == linux]
+        constraints: [node.role == manager]
     networks:
       - poc_net
 
@@ -306,7 +306,7 @@ services:
         condition: on-failure
       replicas: 1
       placement:
-        constraints: [node.platform.os == linux]
+        constraints: [node.role == worker]
     networks:
       - poc_net
 
@@ -322,7 +322,7 @@ services:
         condition: on-failure
       replicas: 1
       placement:
-        constraints: [node.platform.os == linux]
+        constraints: [node.role == worker]
     networks:
       - poc_net
 
@@ -371,7 +371,7 @@ services:
         condition: on-failure
       replicas: 1
       placement:
-        constraints: [node.platform.os == linux]
+        constraints: [node.role == worker]
     networks:
       - poc_net
 
@@ -410,6 +410,10 @@ services:
       - poc_net
     deploy:
       replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.role == worker]
     volumes:
       - postgres-master-data:/bitnami/postgresql
 
@@ -428,6 +432,10 @@ services:
       - poc_net
     deploy:
       replicas: 2
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.role == worker]
     volumes:
       - postgres-replica-data:/bitnami/postgresql
 
@@ -442,6 +450,12 @@ services:
       - postgres-ack-data:/var/lib/postgresql/data
     ports:
       - "5431:5432"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.role == worker]
     networks:
       - poc_net
 
@@ -450,6 +464,12 @@ services:
     restart: always
     ports:
       - 8084:8080
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.role == worker]
     networks:
       - poc_net
       
@@ -567,7 +587,7 @@ services:
       restart_policy:
         condition: on-failure
       placement:
-          constraints: [node.platform.os == linux]
+          constraints: [node.role == worker]
     networks:
       - poc_net
 
@@ -607,7 +627,7 @@ services:
         condition: on-failure
       replicas: 1
       placement:
-        constraints: [node.platform.os == linux]
+        constraints: [node.role == worker]
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.1.1
@@ -629,7 +649,7 @@ services:
       restart_policy:
         condition: on-failure
       placement:
-        constraints: [node.platform.os == linux]
+        constraints: [node.role == worker]
 
 volumes:
   kafka_controller_data_0:
