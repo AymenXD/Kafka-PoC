@@ -11,7 +11,7 @@ x-kafka-controller-base: &kafka-controller-base
     KAFKA_CONTROLLER_QUORUM_VOTERS: 0@kafka-controller-0:9093,1@kafka-controller-1:9093,2@kafka-controller-2:9093
   deploy:
     restart_policy:
-      condition: any
+      condition: on-failure
     placement:
         constraints: [node.platform.os == linux]
 
@@ -31,7 +31,7 @@ x-kafka-broker-base: &kafka-broker-base
     KAFKA_LOG_RETENTION_BYTES: 1073741824
   deploy:
     restart_policy:
-      condition: any
+      condition: on-failure
     placement:
         constraints: [node.platform.os == linux]
 
