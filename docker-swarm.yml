@@ -13,7 +13,7 @@ x-kafka-controller-base: &kafka-controller-base
     restart_policy:
       condition: on-failure
     placement:
-        constraints: [node.role == worker]
+        constraints: [node.role == manager]
 
 # YAML Extension for Kafka Brokers (base configuration)
 x-kafka-broker-base: &kafka-broker-base
@@ -289,7 +289,7 @@ services:
         condition: on-failure
       replicas: 1
       placement:
-        constraints: [node.role == manager]
+        constraints: [node.role == worker]
     networks:
       - poc_net
 
