@@ -150,8 +150,8 @@ services:
       restart_policy:
         condition: on-failure
       replicas: 1  # Replicated for load balancing
-      placement:
-        constraints: [node.role == worker]
+      # placement:
+      #   constraints: [node.role == worker]
     networks:
       - poc_net
 
@@ -216,8 +216,8 @@ services:
       restart_policy:
         condition: on-failure
       replicas: 1
-      placement:
-        constraints: [node.role == worker]
+      # placement:
+      #   constraints: [node.role == worker]
     networks:
       - poc_net
 
@@ -262,8 +262,8 @@ services:
       restart_policy:
         condition: on-failure
       replicas: 1
-      placement:
-        constraints: [node.role == worker]
+      # placement:
+      #   constraints: [node.role == worker]
     networks:
       - poc_net
 
@@ -286,8 +286,8 @@ services:
       restart_policy:
         condition: on-failure
       replicas: 1
-      placement:
-        constraints: [node.role == worker]
+      # placement:
+      #   constraints: [node.role == worker]
     networks:
       - poc_net
 
@@ -303,8 +303,8 @@ services:
       restart_policy:
         condition: on-failure
       replicas: 1
-      placement:
-        constraints: [node.role == worker]
+      # placement:
+      #   constraints: [node.role == worker]
     networks:
       - poc_net
 
@@ -319,8 +319,8 @@ services:
       restart_policy:
         condition: on-failure
       replicas: 1
-      placement:
-        constraints: [node.role == worker]
+      # placement:
+      #   constraints: [node.role == worker]
     networks:
       - poc_net
 
@@ -368,8 +368,8 @@ services:
       restart_policy:
         condition: on-failure
       replicas: 1
-      placement:
-        constraints: [node.role == worker]
+      # placement:
+      #   constraints: [node.role == worker]
     networks:
       - poc_net
 
@@ -410,8 +410,8 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
-      placement:
-        constraints: [node.role == worker]
+      # placement:
+      #   constraints: [node.role == worker]
     volumes:
       - postgres-master-data:/bitnami/postgresql
 
@@ -432,8 +432,8 @@ services:
       replicas: 2
       restart_policy:
         condition: on-failure
-      placement:
-        constraints: [node.role == worker]
+      # placement:
+      #   constraints: [node.role == worker]
     volumes:
       - postgres-replica-data:/bitnami/postgresql
 
@@ -452,8 +452,8 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
-      placement:
-        constraints: [node.role == worker]
+      # placement:
+      #   constraints: [node.role == worker]
     networks:
       - poc_net
 
@@ -466,8 +466,8 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
-      placement:
-        constraints: [node.role == worker]
+      # placement:
+      #   constraints: [node.role == worker]
     networks:
       - poc_net
       
@@ -584,8 +584,8 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-      placement:
-          constraints: [node.role == worker]
+      # placement:
+      #     constraints: [node.role == worker]
     networks:
       - poc_net
 
@@ -624,8 +624,8 @@ services:
       restart_policy:
         condition: on-failure
       replicas: 1
-      placement:
-        constraints: [node.role == worker]
+      # placement:
+      #   constraints: [node.role == worker]
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.1.1
@@ -646,8 +646,8 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
-      placement:
-        constraints: [node.role == worker]
+      # placement:
+      #   constraints: [node.role == worker]
 
 volumes:
   kafka_controller_data_0:
