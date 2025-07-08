@@ -12,8 +12,8 @@ x-kafka-controller-base: &kafka-controller-base
   deploy:
     restart_policy:
       condition: on-failure
-    placement:
-        constraints: [node.role == manager]
+    # placement:
+    #     constraints: [node.role == manager]
 
 # YAML Extension for Kafka Brokers (base configuration)
 x-kafka-broker-base: &kafka-broker-base
@@ -410,8 +410,8 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
-      # placement:
-      #   constraints: [node.role == worker]
+      placement:
+        constraints: [node.role == manager]
     volumes:
       - postgres-master-data:/bitnami/postgresql
 
@@ -452,8 +452,8 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
-      # placement:
-      #   constraints: [node.role == worker]
+      placement:
+        constraints: [node.role == manager]
     networks:
       - poc_net
 
