@@ -2,7 +2,7 @@ version: "3.8"
 
 # YAML Extension for Kafka Controllers (base configuration)
 x-kafka-controller-base: &kafka-controller-base
-  image: apache/kafka:3.8.0
+  image: apache/kafka:4.0.0
   environment: &kafka-controller-env
     KAFKA_PROCESS_ROLES: controller
     KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
@@ -17,7 +17,7 @@ x-kafka-controller-base: &kafka-controller-base
 
 # YAML Extension for Kafka Brokers (base configuration)
 x-kafka-broker-base: &kafka-broker-base
-  image: apache/kafka:3.8.0
+  image: apache/kafka:4.0.0
   environment: &kafka-broker-env
     KAFKA_PROCESS_ROLES: broker
     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
@@ -399,9 +399,9 @@ services:
       - POSTGRESQL_PASSWORD=postgres
       - POSTGRESQL_DATABASE=KafkaData
       # Configure this instance as the master
-      - POSTGRESQL_REPLICATION_MODE=master
-      - POSTGRESQL_REPLICATION_USER=postgres-replica
-      - POSTGRESQL_REPLICATION_PASSWORD=postgres-replica
+      # - POSTGRESQL_REPLICATION_MODE=master
+      # - POSTGRESQL_REPLICATION_USER=postgres-replica
+      # - POSTGRESQL_REPLICATION_PASSWORD=postgres-replica
     ports:
       - "5432:5432"
     networks:
@@ -415,27 +415,27 @@ services:
     volumes:
       - postgres-master-data:/bitnami/postgresql
 
-  postgres-replica:
-    image: bitnami/postgresql:14
-    environment:
-      - POSTGRESQL_USERNAME=postgres
-      - POSTGRESQL_PASSWORD=postgres
-      - POSTGRESQL_DATABASE=KafkaData
-      # Configure this instance as a replica
-      - POSTGRESQL_REPLICATION_MODE=slave
-      - POSTGRESQL_MASTER_HOST=postgres-master
-      - POSTGRESQL_REPLICATION_USER=postgres-replica
-      - POSTGRESQL_REPLICATION_PASSWORD=postgres-replica
-    networks:
-      - poc_net
-    deploy:
-      replicas: 2
-      restart_policy:
-        condition: on-failure
-      # placement:
-      #   constraints: [node.role == worker]
-    volumes:
-      - postgres-replica-data:/bitnami/postgresql
+  # postgres-replica:
+  #   image: bitnami/postgresql:14
+  #   environment:
+  #     - POSTGRESQL_USERNAME=postgres
+  #     - POSTGRESQL_PASSWORD=postgres
+  #     - POSTGRESQL_DATABASE=KafkaData
+  #     # Configure this instance as a replica
+  #     - POSTGRESQL_REPLICATION_MODE=slave
+  #     - POSTGRESQL_MASTER_HOST=postgres-master
+  #     - POSTGRESQL_REPLICATION_USER=postgres-replica
+  #     - POSTGRESQL_REPLICATION_PASSWORD=postgres-replica
+  #   networks:
+  #     - poc_net
+  #   deploy:
+  #     replicas: 2
+  #     restart_policy:
+  #       condition: on-failure
+  #     # placement:
+  #     #   constraints: [node.role == worker]
+  #   volumes:
+  #     - postgres-replica-data:/bitnami/postgresql
 
   postgres-ack:
     image: postgres:13
@@ -457,19 +457,19 @@ services:
     networks:
       - poc_net
 
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8084:8080
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-      # placement:
-      #   constraints: [node.role == worker]
-    networks:
-      - poc_net
+  # adminer:
+  #   image: adminer
+  #   restart: always
+  #   ports:
+  #     - 8084:8080
+  #   deploy:
+  #     replicas: 1
+  #     restart_policy:
+  #       condition: on-failure
+  #     # placement:
+  #     #   constraints: [node.role == worker]
+  #   networks:
+  #     - poc_net
       
   # mongo0:
   #   image: mongo:8.0.4
@@ -750,8 +750,8 @@ volumes:
       device: "//10.101.102.100/GMS/poc/logstash/"
   postgres-master-data:
     driver: local
-  postgres-replica-data:
-    driver: local
+  # postgres-replica-data:
+  #   driver: local
   postgres-ack-data:
     driver: local
 
