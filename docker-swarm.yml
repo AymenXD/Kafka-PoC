@@ -611,8 +611,8 @@ services:
     hostname: kibana
     environment:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
-      - ELASTICSEARCH_USERNAME=admin
-      - ELASTICSEARCH_PASSWORD=pass
+      - ELASTICSEARCH_USERNAME=root
+      - ELASTICSEARCH_PASSWORD=Test123!
     ports:
       - "8082:5601"
     volumes:
@@ -632,8 +632,8 @@ services:
     hostname: keycloak
     command: start-dev
     environment:
-      - KEYCLOAK_ADMIN=admin
-      - KEYCLOAK_ADMIN_PASSWORD=pass
+      - KEYCLOAK_ADMIN=root
+      - KEYCLOAK_ADMIN_PASSWORD=Test123!
       - KC_PROXY=edge
     ports:
       - "8083:8080"
