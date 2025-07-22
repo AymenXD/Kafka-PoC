@@ -330,7 +330,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-    - GF_PATHS_STORAGE=/grafana-provisioning
+    - GF_PATHS_STORAGE=/etc/grafana
     - GF_AUTH_GENERIC_OAUTH_NAME=OAuth
     - GF_AUTH_BASIC_ENABLED=true
     - GF_AUTH_GENERIC_OAUTH_ENABLED=true
@@ -363,7 +363,7 @@ services:
     volumes:
       - grafana-data:/var/lib/grafana
       - grafana-storage:/etc/grafana
-      - grafana-provisioning:/grafana-provisioning
+      - grafana-provisioning:/etc/grafana/provisioning
     deploy:
       restart_policy:
         condition: on-failure
