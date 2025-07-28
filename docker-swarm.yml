@@ -457,19 +457,19 @@ services:
     networks:
       - poc_net
 
-  # adminer:
-  #   image: adminer
-  #   restart: always
-  #   ports:
-  #     - 8084:8080
-  #   deploy:
-  #     replicas: 1
-  #     restart_policy:
-  #       condition: on-failure
-  #     # placement:
-  #     #   constraints: [node.role == worker]
-  #   networks:
-  #     - poc_net
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8084:8080
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      # placement:
+      #   constraints: [node.role == worker]
+    networks:
+      - poc_net
       
   # mongo0:
   #   image: mongo:8.0.4
